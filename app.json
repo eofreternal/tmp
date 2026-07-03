@@ -37,6 +37,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c85e2719-e882-4a03-b36d-b9584e4e8fa3"
+      }
+    },
+    "owner": "eofreternals-team"
   }
 }
