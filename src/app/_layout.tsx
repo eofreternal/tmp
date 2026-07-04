@@ -6,7 +6,13 @@ import Entypo from '@expo/vector-icons/Entypo';
 export default function RootLayout() {
   return (
     <>
-      <Tabs>
+      <Tabs screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "#1d1d1d"
+        },
+
+        tabBarInactiveTintColor: "#c1c7ce"
+      }}>
         <Tabs.Screen name="index" options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (<Ionicons name="musical-note" size={size} color={color} />)
