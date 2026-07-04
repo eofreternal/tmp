@@ -11,7 +11,12 @@ export default function RootLayout() {
           backgroundColor: "#1d1d1d"
         },
 
-        tabBarInactiveTintColor: "#c1c7ce"
+        tabBarInactiveTintColor: "#c1c7ce",
+
+        headerStyle: {
+          backgroundColor: colors.background
+        },
+        headerTintColor: colors.text
       }}>
         <Tabs.Screen name="index" options={{
           title: "Home",
