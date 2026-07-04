@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAudioPlayer } from 'expo-audio';
 
-export default function IndexScreen() {
+export default function SongsScreen() {
     const player = useAudioPlayer(require('../../assets/SOFT INTENTIONS.m4a'));
     player.play()
 
