@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { colors } from "@/styles/global"
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from "@react-native-vector-icons/ionicons";
+import Entypo from "@react-native-vector-icons/entypo";
 
 export default function RootLayout() {
   return (
