@@ -16,7 +16,8 @@ export default function RootLayout() {
         headerStyle: {
           backgroundColor: colors.background
         },
-        headerTintColor: colors.text
+        headerTintColor: colors.text,
+        headerTitleAlign: "center",
       }}>
         <Tabs.Screen name="index" options={{
           title: "Home",
