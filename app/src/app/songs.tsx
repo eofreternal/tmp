@@ -1,4 +1,4 @@
-import { Text, FlatList, Pressable, Image } from "react-native";
+import { Text, FlatList, Pressable, Image, View } from "react-native";
 import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -51,13 +51,16 @@ export default function SongsScreen() {
                     <Pressable onPress={() => {
                         musicState.player.replace({ uri: item.uri });
                         musicState.player.play();
-                    }}>
-                        <Image source={{ uri: item.artwork }} style={{ width: 80, height: 80, borderRadius: 8 }} />
-                        <Text style={globalStyles.text}>{item.name}</Text>
+                    }} style={{ display: "flex", flexDirection: "row" }}>
+                        <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>
+                            <Image source={{ uri: item.artwork }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                            <Text style={globalStyles.text}>{item.name}</Text>
+                        </View>
                     </Pressable>
                 )}
 
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
+                contentContainerStyle={{ gap: "32", padding: 10 }}
             />
         </SafeAreaView>
     );
