@@ -1,4 +1,4 @@
-import { Platform, Text, ScrollView } from "react-native";
+import { Text, FlatList, Pressable, Image } from "react-native";
 import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -7,18 +7,18 @@ import { getAudioMetadata } from '@missingcore/audio-metadata';
 import useMusic from "@/state/music"
 import { useEffect } from "react";
 
-
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
     useEffect(() => {
         async function thing() {
+            const everything = Asset.fromModule(require('../../assets/The Happy Fits - Everything You Do.m4a'))
             const asset = Asset.fromModule(require('../../assets/SOFT INTENTIONS.m4a'))
             await asset.downloadAsync()
+            await everything.downloadAsync()
 
-            const wantedTags = ['album', 'albumArtist', 'artist', 'name', 'track', 'year'] as const;
-            console.log(asset.localUri)
-            // Of course with `await`, use this inside an async function or use `Promise.then()`.
+            const wantedTags = ['album', 'albumArtist', 'artist', 'name', 'track', 'year', "artwork"] as const;
+
             const data = await getAudioMetadata(asset.localUri!, wantedTags);
             /*
               Returns:
@@ -35,20 +35,30 @@ export default function SongsScreen() {
                   }
                 }
             */
-            console.log(data)
-
-            musicState.player.replace({ uri: asset.localUri! })
-            musicState.player.play()
+            const w = await getAudioMetadata(everything.localUri!, wantedTags);
+            musicState.addSong({ name: data.metadata.name, year: data.metadata.year, album: data.metadata.album, artwork: data.metadata.artwork, uri: asset.localUri! })
+            musicState.addSong({ name: w.metadata.name, year: w.metadata.year, album: w.metadata.album, artwork: w.metadata.artwork, uri: everything.localUri! })
         }
         thing()
     }, [])
 
     return (
         <SafeAreaView style={[globalStyles.view]}>
-            <ScrollView>
-                <Text style={globalStyles.text}>Songssssssssssssssssssss</Text>
-                <Text style={globalStyles.text}>{Platform.OS}</Text>
-            </ScrollView>
+            <FlatList
+                data={musicState.songs}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <Pressable onPress={() => {
+                        musicState.player.replace({ uri: item.uri });
+                        musicState.player.play();
+                    }}>
+                        <Image source={{ uri: item.artwork }} style={{ width: 80, height: 80, borderRadius: 8 }} />
+                        <Text style={globalStyles.text}>{item.name}</Text>
+                    </Pressable>
+                )}
+
+                ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
+            />
         </SafeAreaView>
     );
 }
