@@ -1,0 +1,29 @@
+diff --git a/lib/module/libs/expo-file-system.mjs b/lib/module/libs/expo-file-system.mjs
+index 60de9cd9c66b1901cea553ed7d8c4335a91387dd..99aaea8ac5f5f0fc85d236877d689c9399848c80 100644
+--- a/lib/module/libs/expo-file-system.mjs
++++ b/lib/module/libs/expo-file-system.mjs
+@@ -20,7 +20,7 @@ var EncodingType = /*#__PURE__*/function (EncodingType) {
+  */
+ let ExpoFileSystem;
+ try {
+-  ExpoFileSystem = require('expo-file-system');
+-} catch {}
++  ExpoFileSystem = require('expo-file-system/legacy');
++} catch { }
+ export default ExpoFileSystem;
+ //# sourceMappingURL=expo-file-system.mjs.map
+\ No newline at end of file
+diff --git a/src/libs/expo-file-system.ts b/src/libs/expo-file-system.ts
+index 313d63e55d3d704c5e4ba6749d97ce336ef9c2e6..08443dc069ad1f35dce37f35aa64101a05f4de90 100644
+--- a/src/libs/expo-file-system.ts
++++ b/src/libs/expo-file-system.ts
+@@ -57,7 +57,7 @@ type FileSystem = {
+ let ExpoFileSystem: FileSystem | undefined;
+ 
+ try {
+-  ExpoFileSystem = require('expo-file-system');
+-} catch {}
++  ExpoFileSystem = require('expo-file-system/legacy');
++} catch { }
+ 
+ export default ExpoFileSystem;
