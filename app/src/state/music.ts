@@ -1,14 +1,9 @@
 import { AudioPlayer, createAudioPlayer } from "expo-audio";
 import { create } from "zustand";
+import * as schema from "@/db/schema"
+import { InferSelectModel } from "drizzle-orm";
 
-export type Song = {
-    name: string | undefined
-    year: number | undefined
-    album: string | undefined
-    artwork: string | undefined
-
-    uri: string
-}
+export type Song = InferSelectModel<typeof schema.songsTable>
 
 const useMusicStore = create<{
     player: AudioPlayer,
