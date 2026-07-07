@@ -66,11 +66,8 @@ export default function RootLayout() {
 
       await Promise.allSettled(process)
 
-      console.log("all songs")
       const allSongs = await db.select().from(schema.songsTable)
-      console.log(allSongs)
       for (const song of allSongs) {
-        console.log(song)
         musicState.addSong(song)
       }
     }
