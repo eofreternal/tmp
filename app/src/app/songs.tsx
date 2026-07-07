@@ -2,10 +2,7 @@ import { Text, FlatList, Pressable, Image, View } from "react-native";
 import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Asset } from "expo-asset"
-import { getAudioMetadata } from '@missingcore/audio-metadata';
 import useMusic from "@/state/music"
-import { useEffect } from "react";
 
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
