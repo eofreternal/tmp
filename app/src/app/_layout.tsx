@@ -24,7 +24,7 @@ async function handleFile(file: FileSystem.File) {
     return
   }
 
-  const [song] = await db.select().from(schema.songsTable).where(eq(schema.songsTable.name, i.name))
+  const [song] = await db.select().from(schema.songsTable).where(eq(schema.songsTable.name, file.name))
   if (song === undefined) {
     const metadata = await getAudioMetadata(file.uri, wantedTags)
     const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
