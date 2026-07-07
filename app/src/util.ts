@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // } from '@missingcore/react-native-metadata-retriever';
 import { getAudioMetadata } from '@missingcore/audio-metadata';
 
+import 'react-native-get-random-values'
+import { nanoid } from 'nanoid'
+
 const MUSIC_FOLDER = 'music_folder';
 
 export async function getOrRequestMusicFolder() {
@@ -54,7 +57,7 @@ export async function saveArtwork(uri: string) {
             bytes[i] = decodedBase64.charCodeAt(i)
         }
 
-        const uuid = crypto.randomUUID()
+        const uuid = nanoid()
         const imageFile = new FileSystem.File(FileSystem.Paths.document, `${uuid}.${fileExtension}`)
         imageFile.create({ overwrite: true })
         imageFile.write(bytes)
