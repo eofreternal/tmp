@@ -30,7 +30,7 @@ async function handleFile(file: FileSystem.File) {
     const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
     console.log(coverArt)
     await db.insert(schema.songsTable).values({
-      name: file.name,
+      name: metadata.metadata.name || file.name.substring(file.name.lastIndexOf(".") + 1),
       uri: file.uri,
       coverArtUri: coverArt,
 
@@ -41,7 +41,7 @@ async function handleFile(file: FileSystem.File) {
       const metadata = await getAudioMetadata(file.uri, wantedTags)
       const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
       await db.update(schema.songsTable).set({
-        name: file.name,
+        name: metadata.metadata.name || file.name.substring(file.name.lastIndexOf(".") + 1),
         uri: file.uri,
         coverArtUri: coverArt,
 
