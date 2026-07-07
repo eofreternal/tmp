@@ -13,7 +13,6 @@
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "expo": "~57.0.4",
-    "expo-asset": "~57.0.3",
     "expo-audio": "~57.0.0",
     "expo-constants": "~57.0.3",
     "expo-dev-client": "~57.0.5",
