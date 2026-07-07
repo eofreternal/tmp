@@ -8,8 +8,8 @@ import { db } from "@/db/index"
 import * as schema from "@/db/schema"
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../drizzle/migrations"
-import { getOrRequestMusicFolder, handleCoverArt } from "@/util";
-import { getAudioMetadata } from '@missingcore/audio-metadata';
+import { getMetadata, getOrRequestMusicFolder, saveArtwork } from "@/util";
+
 import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
 
@@ -17,20 +17,23 @@ import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
-const wantedTags = ['album', 'albumArtist', 'artist', 'name', 'track', 'year', "artwork"] as const;
+let songsInDb: { uri: string, lastModified: Date }[] = []
 async function handleFile(file: FileSystem.File) {
-  console.log(file.name)
   if ([".m4a", ".mp3"].includes(file.extension) === false) {
     return
   }
 
-  const [song] = await db.select().from(schema.songsTable).where(eq(schema.songsTable.name, file.name))
+  const start = performance.now()
+  const [song] = songsInDb.filter(song => song.uri === file.uri)
+  console.log(`Fetching db for ${file.name} took ${performance.now() - start} milliseconds`)
   if ((song === undefined) || (song.lastModified.getTime() !== file.lastModified!)) {
-    const metadata = await getAudioMetadata(file.uri, wantedTags)
-    const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
+    const start = performance.now()
+    const metadata = await getMetadata(file.uri);
+    const coverArt = await saveArtwork(file.uri);
+    console.log(`Fetching metadata for ${file.name} took ${performance.now() - start} milliseconds`)
 
     const data = {
-      name: metadata.metadata.name || file.name.substring(file.name.lastIndexOf(".") + 1),
+      name: metadata.title || file.name.substring(file.name.lastIndexOf(".") + 1),
       uri: file.uri,
       coverArtUri: coverArt,
 
@@ -43,6 +46,7 @@ async function handleFile(file: FileSystem.File) {
       await db.update(schema.songsTable).set(data).where(eq(schema.songsTable.name, file.name))
     }
   }
+  console.log(`Done processing ${file.name}`)
 }
 
 export default function RootLayout() {
@@ -51,6 +55,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function main() {
+      songsInDb = await db.select({ uri: schema.songsTable.uri, lastModified: schema.songsTable.lastModified }).from(schema.songsTable)
+
       //TODO: clean up old songs that aren't in the music folder anymroe
       const process = []
       const uri = await getOrRequestMusicFolder()
@@ -65,6 +71,7 @@ export default function RootLayout() {
       await Promise.allSettled(process)
 
       const allSongs = await db.select().from(schema.songsTable)
+      allSongs.sort((a, b) => a.name.localeCompare(b.name))
       for (const song of allSongs) {
         musicState.addSong(song)
       }
