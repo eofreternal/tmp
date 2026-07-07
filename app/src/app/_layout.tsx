@@ -13,6 +13,10 @@ import { getAudioMetadata } from '@missingcore/audio-metadata';
 import { eq } from "drizzle-orm"
 import useMusic from "@/state/music"
 
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
 const wantedTags = ['album', 'albumArtist', 'artist', 'name', 'track', 'year', "artwork"] as const;
 async function handleFile(file: FileSystem.File) {
   console.log(file.name)
@@ -70,6 +74,7 @@ export default function RootLayout() {
       for (const song of allSongs) {
         musicState.addSong(song)
       }
+      SplashScreen.hide();
     }
     main()
   }, [])
