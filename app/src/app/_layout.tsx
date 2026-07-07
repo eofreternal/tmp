@@ -10,7 +10,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../drizzle/migrations"
 import { getOrRequestMusicFolder, handleCoverArt } from "@/util";
 import { getAudioMetadata } from '@missingcore/audio-metadata';
-import { eq } from "drizzle-orm"
+import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -25,28 +25,22 @@ async function handleFile(file: FileSystem.File) {
   }
 
   const [song] = await db.select().from(schema.songsTable).where(eq(schema.songsTable.name, file.name))
-  if (song === undefined) {
+  if ((song === undefined) || (song.lastModified.getTime() !== file.lastModified!)) {
     const metadata = await getAudioMetadata(file.uri, wantedTags)
     const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
-    console.log(coverArt)
-    await db.insert(schema.songsTable).values({
+
+    const data = {
       name: metadata.metadata.name || file.name.substring(file.name.lastIndexOf(".") + 1),
       uri: file.uri,
       coverArtUri: coverArt,
 
       lastModified: new Date(file.lastModified!)
-    })
-  } else {
-    if (song.lastModified.getTime() !== file.lastModified!) {
-      const metadata = await getAudioMetadata(file.uri, wantedTags)
-      const coverArt = handleCoverArt(file.name, metadata.metadata.artwork)
-      await db.update(schema.songsTable).set({
-        name: metadata.metadata.name || file.name.substring(file.name.lastIndexOf(".") + 1),
-        uri: file.uri,
-        coverArtUri: coverArt,
+    } satisfies InferInsertModel<typeof schema.songsTable>
 
-        lastModified: new Date(file.lastModified!)
-      }).where(eq(schema.songsTable.name, file.name))
+    if (song === undefined) {
+      await db.insert(schema.songsTable).values(data)
+    } else {
+      await db.update(schema.songsTable).set(data).where(eq(schema.songsTable.name, file.name))
     }
   }
 }
