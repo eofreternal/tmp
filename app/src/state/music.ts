@@ -9,14 +9,23 @@ const useMusicStore = create<{
     player: AudioPlayer,
     songs: Song[],
 
+    currentlyPlayingSong: Song | null,
+
     addSong: (song: Song) => void
-    setPlayer: (newPlayer: AudioPlayer) => void
-}>((set) => ({
+    setPlayer: (song: Song) => void
+}>((set, get) => ({
     player: createAudioPlayer(null),
     songs: [],
+    currentlyPlayingSong: null,
 
     addSong: (song) => set((currentState) => ({ songs: [...currentState.songs, song] })),
-    setPlayer: (newPlayer) => set((_currentState) => ({ player: newPlayer })),
+    setPlayer: (song) => {
+        const { player } = get()
+
+        player.replace({ uri: song.uri })
+        player.play()
+        set({ currentlyPlayingSong: song })
+    },
 }));
 
 export default useMusicStore;
