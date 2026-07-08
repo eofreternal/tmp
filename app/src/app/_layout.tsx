@@ -14,6 +14,7 @@ import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
 
 import * as SplashScreen from 'expo-splash-screen';
+import { Pressable } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,15 +26,16 @@ async function handleFile(file: FileSystem.File) {
 
   const start = performance.now()
   const [song] = songsInDb.filter(song => song.uri === file.uri)
-  console.log(`Fetching db for ${file.name} took ${performance.now() - start} milliseconds`)
+  console.log(`Fetching db for ${file.name} took ${performance.now() - start} milliseconds. Result: ${song}`)
   if ((song === undefined) || (song.lastModified.getTime() !== file.lastModified!)) {
     const start = performance.now()
     const metadata = await getMetadata(file.uri);
     const coverArt = await saveArtwork(file.uri);
+    console.log(coverArt)
     console.log(`Fetching metadata for ${file.name} took ${performance.now() - start} milliseconds`)
 
     const data = {
-      name: metadata.title || file.name.substring(file.name.lastIndexOf(".") + 1),
+      name: metadata.title || file.name.substring(0, file.name.lastIndexOf(".")),
       uri: file.uri,
       coverArtUri: coverArt,
 
@@ -51,24 +53,32 @@ async function handleFile(file: FileSystem.File) {
 
 export default function RootLayout() {
   const musicState = useMusic((state) => state)
-  useMigrations(db, migrations);
+  const { success, error } = useMigrations(db, migrations);
 
   useEffect(() => {
+    if (success === false) {
+      return
+    }
+
     async function main() {
       songsInDb = await db.select({ uri: schema.songsTable.uri, lastModified: schema.songsTable.lastModified }).from(schema.songsTable)
 
       //TODO: clean up old songs that aren't in the music folder anymroe
-      const process = []
+      // const process = []
       const uri = await getOrRequestMusicFolder()
       const directory = new FileSystem.Directory(uri)
       const list = directory.list()
+      let idx = 0
       for (const i of list) {
         if (i instanceof FileSystem.File) {
-          process.push(handleFile(i))
+          // process.push(handleFile(i))
+          console.log(`${idx} / ${list.length}`)
+          await handleFile(i)
+          idx++
         }
       }
 
-      await Promise.allSettled(process)
+      // await Promise.allSettled(process)
 
       const allSongs = await db.select().from(schema.songsTable)
       allSongs.sort((a, b) => a.name.localeCompare(b.name))
@@ -78,7 +88,7 @@ export default function RootLayout() {
       SplashScreen.hide();
     }
     main()
-  }, [])
+  }, [success])
 
   return (
     <>
@@ -94,6 +104,9 @@ export default function RootLayout() {
         },
         headerTintColor: colors.text,
         headerTitleAlign: "center",
+
+        headerLeft: () => (<Pressable style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
+
       }}>
         <Tabs.Screen name="index" options={{
           title: "Home",
