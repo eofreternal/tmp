@@ -26,11 +26,11 @@ export default function RootLayout() {
             }}>
                 <Tabs.Screen name="index" options={{
                     title: "Home",
-                    tabBarIcon: ({ color, size }) => (<Ionicons name="musical-note" size={size} color={color} />)
+                    tabBarIcon: ({ color, size }) => (<Entypo name="home" size={size} color={color} />)
                 }} />
                 <Tabs.Screen name="songs" options={{
                     title: "Songs",
-                    tabBarIcon: ({ color, size }) => (<Entypo name="home" size={size} color={color} />)
+                    tabBarIcon: ({ color, size }) => (<Ionicons name="musical-note" size={size} color={color} />)
                 }} />
             </Tabs>
         </>
