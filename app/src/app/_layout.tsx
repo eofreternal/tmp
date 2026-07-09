@@ -1,7 +1,5 @@
-import { Tabs } from "expo-router";
-import { colors } from "@/styles/global"
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Entypo from "@react-native-vector-icons/entypo";
+import { Stack } from 'expo-router';
+
 import * as FileSystem from "expo-file-system"
 import { useEffect } from "react";
 import { db } from "@/db/index"
@@ -14,7 +12,6 @@ import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
 
 import * as SplashScreen from 'expo-splash-screen';
-import { Pressable } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -51,7 +48,7 @@ async function handleFile(file: FileSystem.File) {
   console.log(`Done processing ${file.name}`)
 }
 
-export default function RootLayout() {
+export default function Layout() {
   const musicState = useMusic((state) => state)
   const { success, error } = useMigrations(db, migrations);
 
@@ -91,32 +88,8 @@ export default function RootLayout() {
   }, [success])
 
   return (
-    <>
-      <Tabs screenOptions={{
-        tabBarStyle: {
-          backgroundColor: "#1d1d1d"
-        },
-
-        tabBarInactiveTintColor: "#c1c7ce",
-
-        headerStyle: {
-          backgroundColor: colors.background
-        },
-        headerTintColor: colors.text,
-        headerTitleAlign: "center",
-
-        headerLeft: () => (<Pressable style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
-
-      }}>
-        <Tabs.Screen name="index" options={{
-          title: "Home",
-          tabBarIcon: ({ color, size }) => (<Ionicons name="musical-note" size={size} color={color} />)
-        }} />
-        <Tabs.Screen name="songs" options={{
-          title: "Songs",
-          tabBarIcon: ({ color, size }) => (<Entypo name="home" size={size} color={color} />)
-        }} />
-      </Tabs>
-    </>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
