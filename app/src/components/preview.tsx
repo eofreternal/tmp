@@ -1,7 +1,8 @@
 import useMusic from "@/state/music"
 import { globalStyles } from "@/styles/global"
-import { View, Text, Image } from "react-native"
+import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
+import { router } from "expo-router"
 
 function secondsToFormattedText(time: number) {
     const seconds = (parseInt(time.toString()) % 60).toString().padStart(2, "0")
@@ -10,7 +11,7 @@ function secondsToFormattedText(time: number) {
     return `${minutes}:${seconds}`
 }
 
-export function Player() {
+export default function Preview() {
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     // For some reason, this updates in increments of 0.5
@@ -20,23 +21,27 @@ export function Player() {
 
     return (
         (currentSong !== null) ?
-            (<View style={{
-                position: "fixed",
-                display: "flex",
-                flexDirection: "row",
-                gap: 8,
+            (<>
+                <Pressable onPress={() => router.replace("/player")}>
+                    <View style={{
+                        position: "fixed",
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 8,
 
-                bottom: 0,
+                        bottom: 0,
 
-                alignItems: "center",
+                        alignItems: "center",
 
-                //debugging
-                borderColor: "red",
-                borderWidth: 1,
-            }}>
-                <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
-                <Text style={globalStyles.text}>{currentSong.name}</Text>
-                <Text style={globalStyles.text}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
-            </View>) : null
+                        //debugging
+                        borderColor: "red",
+                        borderWidth: 1,
+                    }}>
+                        <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                        <Text style={globalStyles.text}>{currentSong.name}</Text>
+                        <Text style={globalStyles.text}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
+                    </View>
+                </Pressable>
+            </>) : <></>
     )
 }

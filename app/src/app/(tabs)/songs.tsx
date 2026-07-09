@@ -3,7 +3,7 @@ import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import useMusic from "@/state/music"
-import { Player } from "@/components/preview";
+import Preview from "@/components/preview";
 
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
@@ -29,7 +29,7 @@ export default function SongsScreen() {
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
                 contentContainerStyle={{ gap: "32", padding: 10 }}
             />
-            <Player />
+            <Preview />
         </SafeAreaView>
     );
 }
