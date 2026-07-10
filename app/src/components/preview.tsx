@@ -14,9 +14,6 @@ function secondsToFormattedText(time: number) {
 export default function Preview() {
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
-    // For some reason, this updates in increments of 0.5
-    // Like, it updates it super fast initially and then has a 0.2s gap then 0.5s gaps afterwards for every update
-    // I dhould dig into the code later to find out why and drop it down to like 100ms or something
     const status = useAudioPlayerStatus(player)
 
     return (

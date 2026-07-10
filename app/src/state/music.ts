@@ -14,7 +14,9 @@ const useMusicStore = create<{
     addSong: (song: Song) => void
     setPlayer: (song: Song) => void
 }>((set, get) => ({
-    player: createAudioPlayer(null),
+    player: createAudioPlayer(null, {
+        updateInterval: 100
+    }),
     songs: [],
     currentlyPlayingSong: null,
 
