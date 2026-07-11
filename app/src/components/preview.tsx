@@ -1,5 +1,5 @@
 import useMusic from "@/state/music"
-import { globalStyles } from "@/styles/global"
+import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { router } from "expo-router"
@@ -33,6 +33,8 @@ export default function Preview() {
                         //debugging
                         borderColor: "red",
                         borderWidth: 1,
+
+                        backgroundColor: colors.background
                     }}>
                         <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
                         <Text style={globalStyles.text}>{currentSong.name}</Text>
