@@ -72,7 +72,7 @@ export default function Player() {
 
                                         fontSize: 16,
                                         fontWeight: "600"
-                                    }, globalStyles.secondaryText]}>{currentSong.name}</Text>
+                                    }, globalStyles.secondaryText]}>{currentSong.artist}</Text>
                                 </View>
                             </View>
 
