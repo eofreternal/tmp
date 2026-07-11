@@ -5,7 +5,23 @@ import Slider from '@expo/ui/community/slider';
 
 import useMusic from "@/state/music"
 import { globalStyles } from "@/styles/global"
-import { useAudioPlayerStatus } from "expo-audio";
+import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
+
+function handlePlayPause(player: AudioPlayer) {
+    if (player.paused) {
+        // There's a slight bit of inaccuracy between the currentTime and the duration of the song
+        // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
+        const difference = Math.abs(player.duration - player.currentTime)
+        if (difference < 0.2) {
+            player.seekTo(0)
+        }
+
+        player.play()
+        return
+    }
+
+    player.pause()
+}
 
 export default function Player() {
     const player = useMusic((state) => state.player)
@@ -83,7 +99,7 @@ export default function Player() {
                                 width: 350,
 
                             }}>
-                                <Pressable onPress={() => player.paused ? player.play() : player.pause()}>
+                                <Pressable onPress={() => { handlePlayPause(player) }}>
                                     {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
                                 </Pressable>
 
