@@ -80,14 +80,13 @@ export default function Player() {
                                 display: "flex",
                                 flexDirection: "column",
 
-                                width: 350
-                            }}>
-                                <Text style={[{
-                                    textAlign: "left",
+                                width: 350,
 
-                                    fontSize: 12,
-                                    fontWeight: "800"
-                                }, globalStyles.secondaryText]}>Beach Bunny</Text>
+                            }}>
+                                <Pressable onPress={() => player.paused ? player.play() : player.pause()}>
+                                    {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
+                                </Pressable>
+
                                 <Slider lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
                             </View>
                         </View>
