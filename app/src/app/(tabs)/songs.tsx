@@ -29,7 +29,6 @@ export default function SongsScreen() {
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
                 contentContainerStyle={{ gap: "32", padding: 10 }}
             />
-            <Preview />
         </SafeAreaView>
     );
 }
