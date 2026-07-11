@@ -1,12 +1,16 @@
 import { Image, View, Text, Pressable } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import Slider from '@expo/ui/community/slider';
 
 import useMusic from "@/state/music"
 import { globalStyles } from "@/styles/global"
+import { useAudioPlayerStatus } from "expo-audio";
 
 export default function Player() {
+    const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
+    const status = useAudioPlayerStatus(player)
 
     return (
         <>
@@ -24,7 +28,11 @@ export default function Player() {
                             justifyContent: "center",
                             alignItems: "center",
 
-                            flexGrow: 1
+                            maxHeight: "66%",
+
+                            flexGrow: 1,
+                            flexShrink: 1,
+                            flexBasis: "auto"
                         }}>
                             <Image source={{ uri: currentSong.coverArtUri || "" }} style={{
                                 width: 350,
@@ -32,35 +40,55 @@ export default function Player() {
                                 borderRadius: 8
                             }} />
                         </View>
-                        <View style={[{
+
+                        <View style={{
                             display: "flex",
-                            flexDirection: "row",
+                            flexDirection: "column",
+                        }}>
+                            <View style={[{
+                                display: "flex",
+                                flexDirection: "row",
 
-                            width: 350,
-                            bottom: 0,
+                                width: 350,
+                                bottom: 0,
 
-                            flexGrow: 1,
-                            flexBasis: 1,
-                            flexShrink: 0
-                        }]}>
+                                flexGrow: 0,
+                                flexShrink: 1
+                            }]}>
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+
+                                    gap: 8
+                                }}>
+                                    <Text style={[{
+                                        textAlign: "left",
+
+                                        fontSize: 20,
+                                        fontWeight: "800"
+                                    }, globalStyles.text]}>{currentSong.name}</Text>
+                                    <Text style={[{
+                                        textAlign: "left",
+
+                                        fontSize: 16,
+                                        fontWeight: "600"
+                                    }, globalStyles.secondaryText]}>{currentSong.name}</Text>
+                                </View>
+                            </View>
+
                             <View style={{
                                 display: "flex",
                                 flexDirection: "column",
 
-                                gap: 8
+                                width: 350
                             }}>
-                                <Text style={[{
-                                    textAlign: "left",
-
-                                    fontSize: 20,
-                                    fontWeight: "800"
-                                }, globalStyles.text]}>{currentSong.name}</Text>
                                 <Text style={[{
                                     textAlign: "left",
 
                                     fontSize: 12,
                                     fontWeight: "800"
                                 }, globalStyles.secondaryText]}>Beach Bunny</Text>
+                                <Slider lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
                             </View>
                         </View>
                     </SafeAreaView>
