@@ -3,7 +3,6 @@ import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { router } from "expo-router"
-import Ionicons from "@react-native-vector-icons/ionicons"
 
 export default function Preview() {
     const player = useMusic((state) => state.player)
