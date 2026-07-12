@@ -126,9 +126,9 @@ export default function Player() {
                                 <Pressable
                                     onPress={() => { handlePlayPause(player) }}
                                     style={{
-                                        backgroundColor: "#2196F3",
-                                        padding: 4,
-                                        borderRadius: 8,
+                                        backgroundColor: "#81cfff",
+                                        borderRadius: 50,
+                                        padding: 8,
                                         alignSelf: 'flex-start'
                                     }}>
                                     {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
