@@ -31,8 +31,6 @@ export default function Player() {
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
 
-    const { width } = useWindowDimensions()
-
     return (
         <>
             {(currentSong !== null) ?
