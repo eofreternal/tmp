@@ -5,13 +5,6 @@ import { useAudioPlayerStatus } from "expo-audio"
 import { router } from "expo-router"
 import Ionicons from "@react-native-vector-icons/ionicons"
 
-function secondsToFormattedText(time: number) {
-    const seconds = (parseInt(time.toString()) % 60).toString().padStart(2, "0")
-    const minutes = parseInt((time / 60).toString())
-
-    return `${minutes}:${seconds}`
-}
-
 export default function Preview() {
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)

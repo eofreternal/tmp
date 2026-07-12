@@ -66,3 +66,10 @@ export async function saveArtwork(uri: string) {
 
     return undefined
 }
+
+export function secondsToFormattedText(time: number) {
+    const seconds = (parseInt(time.toString()) % 60).toString().padStart(2, "0")
+    const minutes = parseInt((time / 60).toString())
+
+    return `${minutes}:${seconds}`
+}
