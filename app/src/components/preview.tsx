@@ -3,6 +3,7 @@ import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { router } from "expo-router"
+import Ionicons from "@react-native-vector-icons/ionicons"
 
 function secondsToFormattedText(time: number) {
     const seconds = (parseInt(time.toString()) % 60).toString().padStart(2, "0")
@@ -19,7 +20,7 @@ export default function Preview() {
     return (
         (currentSong !== null) ?
             (<>
-                <Pressable onPress={() => router.replace("/player")}>
+                <Pressable onPress={() => router.navigate("/player")}>
                     <View style={{
                         position: "fixed",
                         display: "flex",
