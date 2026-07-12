@@ -3,7 +3,6 @@ import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import useMusic from "@/state/music"
-import Preview from "@/components/preview";
 
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
