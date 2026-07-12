@@ -3,6 +3,7 @@ import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { router } from "expo-router"
+import { secondsToFormattedText } from "@/util"
 
 export default function Preview() {
     const player = useMusic((state) => state.player)

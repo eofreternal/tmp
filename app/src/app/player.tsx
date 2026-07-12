@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable } from "react-native"
+import { Image, View, Text, Pressable, useWindowDimensions } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Slider from '@expo/ui/community/slider';
@@ -7,6 +7,7 @@ import useMusic from "@/state/music"
 import { globalStyles } from "@/styles/global"
 import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { router } from "expo-router";
+import { secondsToFormattedText } from "@/util";
 
 function handlePlayPause(player: AudioPlayer) {
     if (player.paused) {
@@ -29,6 +30,8 @@ export default function Player() {
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
 
+    const { width } = useWindowDimensions()
+
     return (
         <>
             {(currentSong !== null) ?
@@ -37,12 +40,14 @@ export default function Player() {
                         display: "flex",
                         flexDirection: "column",
 
-                        alignItems: "center"
+                        alignItems: "center",
+                        padding: 16
                     }, globalStyles.view]}>
                         <Pressable style={{
                             display: "flex",
                             flexDirection: "column",
-                            width: 400,
+
+                            width: "100%",
 
                             alignItems: "flex-start"
                         }} onPress={() => { router.back() }}>
@@ -55,6 +60,7 @@ export default function Player() {
                             justifyContent: "center",
                             alignItems: "center",
 
+                            width: "100%",
                             maxHeight: "66%",
 
                             flexGrow: 1,
@@ -62,8 +68,8 @@ export default function Player() {
                             flexBasis: "auto"
                         }}>
                             <Image source={{ uri: currentSong.coverArtUri || "" }} style={{
-                                width: 400,
-                                height: 400,
+                                aspectRatio: 1,
+                                width: "100%",
                                 borderRadius: 8
                             }} />
                         </View>
@@ -76,7 +82,7 @@ export default function Player() {
                                 display: "flex",
                                 flexDirection: "row",
 
-                                width: 400,
+                                width: "100%",
                                 bottom: 0,
 
                                 flexGrow: 0,
@@ -109,11 +115,28 @@ export default function Player() {
 
                                 width: 400,
                             }}>
-                                <Pressable onPress={() => { handlePlayPause(player) }}>
+                                <Pressable
+                                    onPress={() => { handlePlayPause(player) }}
+                                    style={{ backgroundColor: "#2196F3", padding: 4, borderRadius: 8 }}
+                                >
                                     {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
                                 </Pressable>
 
-                                <Slider lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 8,
+
+                                    alignItems: "center",
+
+                                    width: width
+                                }}>
+                                    <Text style={[globalStyles.text, { width: 40 }]}>{secondsToFormattedText(status.currentTime)}</Text>
+                                    <View style={{ flex: 1 }}>
+                                        <Slider style={{ width: "100%" }} lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
+                                    </View>
+                                    <Text style={[globalStyles.text, { width: 40 }]}>{secondsToFormattedText(status.duration)}</Text>
+                                </View>
                             </View>
                         </View>
                     </SafeAreaView>
