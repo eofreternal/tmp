@@ -80,6 +80,7 @@ export default function Player() {
                             <View style={[{
                                 display: "flex",
                                 flexDirection: "row",
+                                justifyContent: "space-between",
 
                                 width: "100%",
                                 bottom: 0,
@@ -110,8 +111,15 @@ export default function Player() {
                                 <View style={{
                                     display: "flex",
                                     flexDirection: "row",
+
+                                    gap: 16
                                 }}>
-                                    <Entypo name="heart-outlined" size={24} color="white" />
+                                    <Pressable>
+                                        <Entypo name="heart-outlined" size={24} color="white" />
+                                    </Pressable>
+                                    <Pressable>
+                                        <Entypo name="dots-three-vertical" size={24} color="white" />
+                                    </Pressable>
                                 </View>
                             </View>
 
