@@ -141,13 +141,13 @@ export default function Player() {
 
                                     alignItems: "center",
 
-                                    width: width
+                                    maxWidth: 400
                                 }}>
-                                    <Text style={[globalStyles.text, { width: 40 }]}>{secondsToFormattedText(status.currentTime)}</Text>
+                                    <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.currentTime)}</Text>
                                     <View style={{ flex: 1 }}>
                                         <Slider style={{ width: "100%" }} lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
                                     </View>
-                                    <Text style={[globalStyles.text, { width: 40 }]}>{secondsToFormattedText(status.duration)}</Text>
+                                    <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.duration)}</Text>
                                 </View>
                             </View>
                         </View>
