@@ -6,6 +6,7 @@ import Slider from '@expo/ui/community/slider';
 import useMusic from "@/state/music"
 import { globalStyles } from "@/styles/global"
 import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
+import { router } from "expo-router";
 
 function handlePlayPause(player: AudioPlayer) {
     if (player.paused) {
@@ -38,6 +39,16 @@ export default function Player() {
 
                         alignItems: "center"
                     }, globalStyles.view]}>
+                        <Pressable style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: 350,
+
+                            alignItems: "flex-start"
+                        }} onPress={() => { router.back() }}>
+                            <Ionicons name="chevron-down-outline" size={24} color="white" />
+                        </Pressable>
+
                         <View style={{
                             display: "flex",
                             flexDirection: "column",
