@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable } from "react-native"
+import { Image, View, Text, Pressable, Modal } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
@@ -26,13 +26,15 @@ function handlePlayPause(player: AudioPlayer) {
     player.pause()
 }
 
-export default function Player() {
+export default function Player({ isVisible, closeModal }: {
+    isVisible: boolean, closeModal: () => void
+}) {
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
 
     return (
-        <Modal>
+        <Modal visible={isVisible} animationType="slide">
             {(currentSong !== null) ?
                 <>
                     <SafeAreaView style={[{
@@ -49,7 +51,7 @@ export default function Player() {
                             width: "100%",
 
                             alignItems: "flex-start"
-                        }} onPress={() => { router.back() }}>
+                        }} onPress={() => closeModal()}>
                             <Ionicons name="chevron-down-outline" size={24} color="white" />
                         </Pressable>
 

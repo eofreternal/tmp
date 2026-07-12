@@ -93,7 +93,6 @@ export default function Layout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
       <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
-      <Stack.Screen name="player" options={{ headerShown: false }} />
     </Stack>
   );
 }
