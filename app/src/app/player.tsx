@@ -1,5 +1,6 @@
 import { Image, View, Text, Pressable, useWindowDimensions } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
+import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Slider from '@expo/ui/community/slider';
 
@@ -107,6 +108,13 @@ export default function Player() {
                                         fontWeight: "600"
                                     }, globalStyles.secondaryText]}>{currentSong.artist}</Text>
                                 </View>
+
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                }}>
+                                    <Entypo name="heart-outlined" size={24} color="white" />
+                                </View>
                             </View>
 
                             <View style={{
@@ -117,8 +125,12 @@ export default function Player() {
                             }}>
                                 <Pressable
                                     onPress={() => { handlePlayPause(player) }}
-                                    style={{ backgroundColor: "#2196F3", padding: 4, borderRadius: 8 }}
-                                >
+                                    style={{
+                                        backgroundColor: "#2196F3",
+                                        padding: 4,
+                                        borderRadius: 8,
+                                        alignSelf: 'flex-start'
+                                    }}>
                                     {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
                                 </Pressable>
 
