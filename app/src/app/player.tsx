@@ -42,7 +42,7 @@ export default function Player() {
                         <Pressable style={{
                             display: "flex",
                             flexDirection: "column",
-                            width: 350,
+                            width: 400,
 
                             alignItems: "flex-start"
                         }} onPress={() => { router.back() }}>
@@ -62,8 +62,8 @@ export default function Player() {
                             flexBasis: "auto"
                         }}>
                             <Image source={{ uri: currentSong.coverArtUri || "" }} style={{
-                                width: 350,
-                                height: 350,
+                                width: 400,
+                                height: 400,
                                 borderRadius: 8
                             }} />
                         </View>
@@ -76,7 +76,7 @@ export default function Player() {
                                 display: "flex",
                                 flexDirection: "row",
 
-                                width: 350,
+                                width: 400,
                                 bottom: 0,
 
                                 flexGrow: 0,
@@ -107,8 +107,7 @@ export default function Player() {
                                 display: "flex",
                                 flexDirection: "column",
 
-                                width: 350,
-
+                                width: 400,
                             }}>
                                 <Pressable onPress={() => { handlePlayPause(player) }}>
                                     {player.paused ? <Ionicons name="play" size={36} color="white" /> : <Ionicons name="pause" size={36} color="white" />}
