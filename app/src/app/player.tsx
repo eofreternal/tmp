@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable, useWindowDimensions } from "react-native"
+import { Image, View, Text, Pressable } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
@@ -32,7 +32,7 @@ export default function Player() {
     const status = useAudioPlayerStatus(player)
 
     return (
-        <>
+        <Modal>
             {(currentSong !== null) ?
                 <>
                     <SafeAreaView style={[{
@@ -160,6 +160,6 @@ export default function Player() {
                     </SafeAreaView>
                 </> : <></>
             }
-        </>
+        </Modal>
     )
 }
