@@ -1,6 +1,5 @@
 import { Text, VirtualizedList, Pressable, Image, View } from "react-native";
 import { globalStyles } from "@/styles/global"
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import useMusic from "@/state/music"
 
@@ -8,7 +7,7 @@ export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
     return (
-        <SafeAreaView style={[globalStyles.view]}>
+        <View style={[globalStyles.view]}>
             <VirtualizedList
                 initialNumToRender={16}
                 data={musicState.songs}
@@ -28,6 +27,6 @@ export default function SongsScreen() {
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
                 contentContainerStyle={{ gap: "32", padding: 10 }}
             />
-        </SafeAreaView>
+        </View>
     );
 }
