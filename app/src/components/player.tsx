@@ -7,7 +7,6 @@ import Slider from '@expo/ui/community/slider';
 import useMusic from "@/state/music"
 import { colors, globalStyles } from "@/styles/global"
 import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { router } from "expo-router";
 import { secondsToFormattedText } from "@/util";
 
 function handlePlayPause(player: AudioPlayer) {
