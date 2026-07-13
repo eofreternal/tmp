@@ -139,7 +139,7 @@ export default function Player({ isVisible, closeModal }: {
                                         padding: 8,
                                         alignSelf: 'flex-start'
                                     }}>
-                                    {player.paused ? <Ionicons name="play" size={36} color={colors.background} /> : <Ionicons name="pause" size={36} color="white" />}
+                                    {player.paused ? <Ionicons name="play" size={36} color={colors.background} /> : <Ionicons name="pause" size={36} color={colors.background} />}
                                 </Pressable>
 
                                 <View style={{
