@@ -6,20 +6,24 @@ import { InferSelectModel } from "drizzle-orm";
 export type Song = InferSelectModel<typeof schema.songsTable>
 
 const useMusicStore = create<{
+    showPlayer: boolean,
     player: AudioPlayer,
     songs: Song[],
 
     currentlyPlayingSong: Song | null,
 
+    setShowPlayer: (value: boolean) => void,
     addSong: (song: Song) => void
     setPlayer: (song: Song) => void
 }>((set, get) => ({
+    showPlayer: false,
     player: createAudioPlayer(null, {
         updateInterval: 100
     }),
     songs: [],
     currentlyPlayingSong: null,
 
+    setShowPlayer: (value) => set((_currentState) => ({ showPlayer: value })),
     addSong: (song) => set((currentState) => ({ songs: [...currentState.songs, song] })),
     setPlayer: (song) => {
         const { player } = get()

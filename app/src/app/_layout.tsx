@@ -12,6 +12,10 @@ import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
 
 import * as SplashScreen from 'expo-splash-screen';
+import Player from '@/components/player';
+
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -89,10 +93,13 @@ export default function Layout() {
   }, [success])
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-      <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
-    </Stack>
+        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
+      </Stack>
+
+      <Player isVisible={musicState.showPlayer} closeModal={() => { musicState.setShowPlayer(false) }} /></>
   );
 }

@@ -3,15 +3,12 @@ import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { secondsToFormattedText } from "@/util"
-import Player from "@/components/player"
-import { useState } from "react"
 
 export default function Preview() {
+    const setShowPlayer = useMusic((state) => state.setShowPlayer)
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
-
-    const [showPlayer, setShowPlayer] = useState(false)
 
     return (
         (currentSong !== null) ?
@@ -38,7 +35,6 @@ export default function Preview() {
                         <Text style={globalStyles.text}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
                     </View>
                 </Pressable>
-                <Player isVisible={showPlayer} closeModal={() => { setShowPlayer(false) }} />
             </>) : <></>
     )
 }
