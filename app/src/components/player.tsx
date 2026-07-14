@@ -163,9 +163,6 @@ export default function Player({ isVisible, closeModal }: {
                                 gap: 16
                             }}>
                                 <Pressable>
-                                    <Entypo name="heart-outlined" size={24} color="white" />
-                                </Pressable>
-                                <Pressable>
                                     <Entypo name="dots-three-vertical" size={24} color="white" />
                                 </Pressable>
                             </View>
