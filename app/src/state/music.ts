@@ -5,10 +5,15 @@ import { InferSelectModel } from "drizzle-orm";
 
 export type Song = InferSelectModel<typeof schema.songsTable>
 
+// export type Playlist = {
+
+// }[]
+
 const useMusicStore = create<{
     showPlayer: boolean,
     player: AudioPlayer,
     songs: Song[],
+    // playlists: any[],
 
     currentlyPlayingSong: Song | null,
 

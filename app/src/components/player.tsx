@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable, Modal } from "react-native"
+import { Image, View, Text, Pressable } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
@@ -9,8 +9,10 @@ import { colors, globalStyles } from "@/styles/global"
 import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { secondsToFormattedText } from "@/util";
 
-import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle, FadeInDown } from 'react-native-reanimated';
-import { useEffect } from "react";
+import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { useEffect, useState } from "react";
+
+import SongThreeDotMenu from "@/components/songThreeDotMenu";
 
 function handlePlayPause(player: AudioPlayer) {
     if (player.paused) {
@@ -31,6 +33,7 @@ function handlePlayPause(player: AudioPlayer) {
 export default function Player({ isVisible, closeModal }: {
     isVisible: boolean, closeModal: () => void
 }) {
+    const [showMenu, setShowMenu] = useState(false)
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
@@ -162,7 +165,7 @@ export default function Player({ isVisible, closeModal }: {
 
                                 gap: 16
                             }}>
-                                <Pressable>
+                                <Pressable onPress={() => { setShowMenu(true) }}>
                                     <Entypo name="dots-three-vertical" size={24} color="white" />
                                 </Pressable>
                             </View>
@@ -204,6 +207,8 @@ export default function Player({ isVisible, closeModal }: {
                     </View>
                 </SafeAreaView>
             </Animated.View>
+
+            <SongThreeDotMenu show={showMenu} songId={currentSong.id} onClose={() => setShowMenu(false)} />
         </View>
     )
 }

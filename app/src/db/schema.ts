@@ -22,7 +22,7 @@ export const playlistSongsJunctionTable = sqliteTable("playlistSongsJunction", {
     playlistId: integer().notNull().references(() => playlistTable.id, { onDelete: "cascade" }),
     songId: integer().notNull().references(() => songsTable.id, { onDelete: "cascade" }),
 
-    order: integer().notNull()
+    dateAdded: integer({ mode: "timestamp_ms" }).notNull()
 })
 
 export const relations = defineRelations({ songsTable, playlistTable, playlistSongsJunctionTable }, (r) => ({
