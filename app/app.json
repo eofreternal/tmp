@@ -7,6 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "tmp",
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0f0f0f",
     "ios": {
       "icon": "./assets/expo.icon"
     },
