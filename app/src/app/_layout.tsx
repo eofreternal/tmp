@@ -15,6 +15,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Player from '@/components/player';
 
 import { LogBox } from 'react-native';
+import { colors } from '@/styles/global';
 LogBox.ignoreAllLogs();
 
 SplashScreen.preventAutoHideAsync();
@@ -97,7 +98,9 @@ export default function Layout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleStyle: { color: colors.text }, headerTitleAlign: "center" }} />
+
+        <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
       </Stack>
 
       <Player isVisible={musicState.showPlayer} closeModal={() => { musicState.setShowPlayer(false) }} /></>

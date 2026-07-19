@@ -5,6 +5,7 @@ import { BottomTabBar } from "expo-router/js-tabs";
 import { colors } from "@/styles/global"
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Entypo from "@react-native-vector-icons/entypo";
+import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import Preview from "@/components/preview";
 
 export default function RootLayout() {
@@ -40,6 +41,10 @@ export default function RootLayout() {
                 <Tabs.Screen name="songs" options={{
                     title: "Songs",
                     tabBarIcon: ({ color, size }) => (<Ionicons name="musical-note" size={size} color={color} />)
+                }} />
+                <Tabs.Screen name="playlists" options={{
+                    title: "Playlists",
+                    tabBarIcon: ({ color, size }) => (<MaterialDesignIcons name="playlist-music" size={size} color={color} />)
                 }} />
             </Tabs >
         </>

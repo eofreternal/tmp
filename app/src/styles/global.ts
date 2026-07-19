@@ -17,5 +17,8 @@ export const globalStyles = StyleSheet.create({
     },
     secondaryText: {
         color: colors.secondaryText
+    },
+    accentText: {
+        color: colors.accent
     }
 }) 

@@ -28,8 +28,15 @@ export const playlistSongsJunctionTable = sqliteTable("playlistSongsJunction", {
 export const relations = defineRelations({ songsTable, playlistTable, playlistSongsJunctionTable }, (r) => ({
     songsTable: {
         playlists: r.many.playlistTable({
-            from: r.songsTable.id.through(r.playlistSongsJunctionTable.playlistId),
+            from: r.songsTable.id.through(r.playlistSongsJunctionTable.songId),
             to: r.playlistTable.id.through(r.playlistSongsJunctionTable.playlistId)
+        })
+    },
+
+    playlistTable: {
+        songs: r.many.songsTable({
+            from: r.playlistTable.id.through(r.playlistSongsJunctionTable.playlistId),
+            to: r.songsTable.id.through(r.playlistSongsJunctionTable.songId)
         })
     },
 
@@ -37,6 +44,11 @@ export const relations = defineRelations({ songsTable, playlistTable, playlistSo
         songData: r.one.songsTable({
             from: r.playlistSongsJunctionTable.songId,
             to: r.songsTable.id
+        }),
+
+        playlistData: r.one.playlistTable({
+            from: r.playlistSongsJunctionTable.playlistId,
+            to: r.playlistTable.id
         })
     }
 }))
