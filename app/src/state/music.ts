@@ -5,38 +5,88 @@ import { InferSelectModel } from "drizzle-orm";
 
 export type Song = InferSelectModel<typeof schema.songsTable>
 
-// export type Playlist = {
-
-// }[]
-
 const useMusicStore = create<{
     showPlayer: boolean,
     player: AudioPlayer,
     songs: Song[],
-    // playlists: any[],
-
-    currentlyPlayingSong: Song | null,
+    queue: Song[],
+    currentQueueIndex: number,
 
     setShowPlayer: (value: boolean) => void,
     addSong: (song: Song) => void
-    setPlayer: (song: Song) => void
+
+    clearQueue: () => void,
+    addSongToQueue: (song: Song) => void,
+    setCurrentQueueIndex: (index: number) => void,
+
+    startPlayer: () => void,
+    stopPlayer: () => void,
+
+    nextSong: () => void,
+    previousSong: () => void
 }>((set, get) => ({
     showPlayer: false,
     player: createAudioPlayer(null, {
         updateInterval: 100
     }),
     songs: [],
-    currentlyPlayingSong: null,
+    queue: [],
+    currentQueueIndex: 0,
 
     setShowPlayer: (value) => set((_currentState) => ({ showPlayer: value })),
     addSong: (song) => set((currentState) => ({ songs: [...currentState.songs, song] })),
-    setPlayer: (song) => {
-        const { player } = get()
+
+    clearQueue: () => set((_currentState) => ({ queue: [], currentQueueIndex: 0 })),
+    addSongToQueue: (song) => set((currentState) => ({ queue: [...currentState.queue, song] })),
+    setCurrentQueueIndex: (index) => set((currentState) => ({ currentQueueIndex: index })),
+
+    startPlayer: () => {
+        const { player, queue, currentQueueIndex, nextSong } = get()
+
+        const song = queue[currentQueueIndex]
+        if (song === undefined) {
+            return
+        }
 
         player.replace({ uri: song.uri })
         player.play()
-        set({ currentlyPlayingSong: song })
+
+        player.addListener("playbackStatusUpdate", (status) => {
+            if (status.didJustFinish) {
+                nextSong()
+            }
+        })
     },
+    stopPlayer: () => {
+        const { player } = get()
+
+        player.pause()
+    },
+
+    nextSong: () => {
+        const { player, queue, currentQueueIndex } = get()
+
+        const song = queue[currentQueueIndex + 1]
+        if (song === undefined) {
+            return
+        }
+
+        player.replace({ uri: song.uri })
+        player.play()
+        set((currentState) => ({ currentQueueIndex: currentState.currentQueueIndex + 1 }))
+    },
+    previousSong: () => {
+        const { player, queue, currentQueueIndex } = get()
+
+        const song = queue[currentQueueIndex - 1]
+        if (song === undefined) {
+            return
+        }
+
+        player.replace({ uri: song.uri })
+        player.play()
+        set((currentState) => ({ currentQueueIndex: currentState.currentQueueIndex - 1 }))
+    }
 }));
 
 export default useMusicStore;

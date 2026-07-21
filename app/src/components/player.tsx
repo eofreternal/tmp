@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable } from "react-native"
+import { Image, View, Text, Pressable, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
@@ -6,7 +6,7 @@ import Slider from '@expo/ui/community/slider';
 
 import useMusic from "@/state/music"
 import { colors, globalStyles } from "@/styles/global"
-import { AudioPlayer, useAudioPlayerStatus } from "expo-audio";
+import { useAudioPlayerStatus } from "expo-audio";
 import { secondsToFormattedText } from "@/util";
 
 import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
@@ -14,32 +14,41 @@ import { useEffect, useState } from "react";
 
 import SongThreeDotMenu from "@/components/songThreeDotMenu";
 
-function handlePlayPause(player: AudioPlayer) {
-    if (player.paused) {
-        // There's a slight bit of inaccuracy between the currentTime and the duration of the song
-        // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
-        const difference = Math.abs(player.duration - player.currentTime)
-        if (difference < 0.2) {
-            player.seekTo(0)
-        }
-
-        player.play()
-        return
-    }
-
-    player.pause()
-}
-
 export default function Player({ isVisible, closeModal }: {
     isVisible: boolean, closeModal: () => void
 }) {
+    const [showQueue, setShowQueue] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
+
+    const musicState = useMusic((state) => state)
+
     const player = useMusic((state) => state.player)
-    const currentSong = useMusic((state) => state.currentlyPlayingSong)
+    const currentSong = useMusic((state) => state.queue[state.currentQueueIndex])
+    const queue = useMusic((state) => state.queue)
+    const currentQueueIndex = useMusic((state) => state.currentQueueIndex)
     const status = useAudioPlayerStatus(player)
 
     const opacity = useSharedValue(0)
     const translateY = useSharedValue(0)
+    const queueOpacity = useSharedValue(0)
+    const queueTranslateY = useSharedValue(0)
+
+    function handlePlayPause() {
+        if (player.paused) {
+            // There's a slight bit of inaccuracy between the currentTime and the duration of the song
+            // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
+            const difference = Math.abs(player.duration - player.currentTime)
+            if (difference < 0.2) {
+                player.seekTo(0)
+            }
+
+            musicState.startPlayer()
+            return
+        }
+
+        musicState.stopPlayer()
+    }
+
 
     useEffect(() => {
         if (isVisible) {
@@ -51,12 +60,26 @@ export default function Player({ isVisible, closeModal }: {
         }
     }, [isVisible])
 
+    useEffect(() => {
+        if (showQueue) {
+            queueOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.quad) })
+            queueTranslateY.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
+        } else {
+            queueOpacity.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
+            queueTranslateY.value = withTiming(50, { duration: 300, easing: Easing.out(Easing.quad) })
+        }
+    }, [showQueue])
+
     const animatedStyle = useAnimatedStyle(() => ({
         opacity: opacity.value,
         transform: [{ translateY: translateY.value }]
     }))
+    const queueAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: queueOpacity.value,
+        transform: [{ translateY: queueTranslateY.value }]
+    }))
 
-    if (currentSong === null) {
+    if (currentSong === undefined) {
         return <></>
     }
 
@@ -70,8 +93,8 @@ export default function Player({ isVisible, closeModal }: {
                 bottom: 0,
                 right: 0,
 
-                zIndex: 999,
-                elevation: 999
+                zIndex: 99,
+                elevation: 99
             }}
         >
             <Animated.View
@@ -81,6 +104,8 @@ export default function Player({ isVisible, closeModal }: {
                     flex: 1,
                     height: "100%",
                     backgroundColor: colors.background,
+
+                    zIndex: 100,
 
                     borderColor: "green",
                     borderWidth: 1
@@ -98,6 +123,7 @@ export default function Player({ isVisible, closeModal }: {
                         flexDirection: "column",
 
                         width: "100%",
+                        padding: 16,
 
                         alignItems: "flex-start"
                     }} onPress={() => closeModal()}>
@@ -176,9 +202,10 @@ export default function Player({ isVisible, closeModal }: {
                             flexDirection: "column",
 
                             width: 400,
+                            gap: 16
                         }}>
                             <Pressable
-                                onPress={() => { handlePlayPause(player) }}
+                                onPress={() => { handlePlayPause() }}
                                 style={{
                                     backgroundColor: "#81cfff",
                                     borderRadius: 50,
@@ -203,12 +230,88 @@ export default function Player({ isVisible, closeModal }: {
                                 </View>
                                 <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.duration)}</Text>
                             </View>
+
+                            <View style={{
+                                display: "flex",
+                                flexDirection: "row",
+
+                                alignItems: "flex-start"
+                            }}>
+                                <Pressable onPress={() => setShowQueue(true)} style={{
+                                    borderColor: "red",
+                                    borderWidth: 1,
+                                }}>
+                                    <Text style={globalStyles.accentText}>Playing {currentQueueIndex + 1} of {queue.length}</Text>
+                                </Pressable>
+                            </View>
                         </View>
                     </View>
                 </SafeAreaView>
             </Animated.View>
 
             <SongThreeDotMenu show={showMenu} songId={currentSong.id} onClose={() => setShowMenu(false)} />
+            <Animated.View
+                pointerEvents={showQueue ? "auto" : "none"}
+
+                style={[{
+                    position: "absolute",
+                    flex: 1,
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: colors.background,
+
+                    zIndex: 101
+                }, queueAnimatedStyle]}
+            >
+                <SafeAreaView style={[{
+                    display: "flex",
+                    flexDirection: "column",
+
+                    alignItems: "center",
+
+                    paddingLeft: 16,
+                    paddingRight: 16
+                }, globalStyles.view]}>
+                    <Pressable style={{
+                        display: "flex",
+                        flexDirection: "column",
+
+                        width: "100%",
+                        padding: 16,
+
+                        alignItems: "flex-start"
+                    }} onPress={() => setShowQueue(false)}>
+                        <Ionicons name="chevron-down-outline" size={24} color="white" />
+                    </Pressable>
+                    <FlatList
+                        initialNumToRender={16}
+                        data={queue}
+
+                        keyExtractor={(data) => data.id.toString()}
+
+                        renderItem={({ item, index }) => (
+                            <Pressable
+                                onPress={() => {
+                                    musicState.setCurrentQueueIndex(index)
+                                    musicState.startPlayer()
+                                }}
+                                style={{ display: "flex", flexDirection: "row" }}>
+                                <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>
+                                    <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                                    <Text style={globalStyles.text}>{item.name}</Text>
+                                </View>
+                            </Pressable>
+                        )}
+
+                        contentContainerStyle={{
+                            gap: 16
+                        }}
+                        style={{
+                            width: "100%"
+                        }}
+                    />
+                </SafeAreaView>
+            </Animated.View>
         </View>
     )
 }

@@ -7,11 +7,11 @@ import { secondsToFormattedText } from "@/util"
 export default function Preview() {
     const setShowPlayer = useMusic((state) => state.setShowPlayer)
     const player = useMusic((state) => state.player)
-    const currentSong = useMusic((state) => state.currentlyPlayingSong)
     const status = useAudioPlayerStatus(player)
+    const currentSong = useMusic((state) => state.queue[state.currentQueueIndex])
 
     return (
-        (currentSong !== null) ?
+        (currentSong !== undefined) ?
             (<>
                 <Pressable onPress={() => { setShowPlayer(true) }}>
                     <View style={{
