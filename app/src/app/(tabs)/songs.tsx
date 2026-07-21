@@ -1,4 +1,6 @@
-import { Text, VirtualizedList, Pressable, Image, View } from "react-native";
+import { Text, Pressable, Image, View } from "react-native";
+import { FlashList } from "@shopify/flash-list"
+
 import { globalStyles } from "@/styles/global"
 
 import { BottomSheet, Button, Host } from "@expo/ui"
@@ -16,11 +18,10 @@ export default function SongsScreen() {
 
     return (
         <View style={[globalStyles.view]}>
-            <VirtualizedList
-                initialNumToRender={16}
+            <FlashList
                 data={musicState.songs}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({ item }: { item: typeof musicState.songs[number] }) => (
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
                     <Pressable
                         onPress={() => {
                             musicState.clearQueue()
@@ -30,7 +31,8 @@ export default function SongsScreen() {
                         }}
                         style={{
                             display: "flex",
-                            flexDirection: "row"
+                            flexDirection: "row",
+                            marginBottom: 16
                         }}>
                         <View style={{
                             display: "flex",
@@ -56,11 +58,11 @@ export default function SongsScreen() {
                         </View>
                     </Pressable>
                 )}
-                getItem={(_data, index) => musicState.songs[index]!}
-                getItemCount={() => musicState.songs.length}
 
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
-                contentContainerStyle={{ gap: "32", padding: 10 }}
+                contentContainerStyle={{
+                    padding: 10
+                }}
             />
 
             <BottomSheet isPresented={showThreeDotMenu} onDismiss={() => setShowThreeDotMenu(false)}>

@@ -10,6 +10,7 @@
     "@react-native-vector-icons/entypo": "^13.1.2",
     "@react-native-vector-icons/ionicons": "^13.1.2",
     "@react-native-vector-icons/material-design-icons": "^13.1.2",
+    "@shopify/flash-list": "2.0.2",
     "babel-plugin-inline-import": "^3.0.0",
     "drizzle-orm": "^1.0.0-rc.4",
     "expo": "~57.0.7",

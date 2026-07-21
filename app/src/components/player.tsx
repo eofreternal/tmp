@@ -1,4 +1,5 @@
-import { Image, View, Text, Pressable, FlatList } from "react-native"
+import { Image, View, Text, Pressable } from "react-native"
+import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
@@ -283,8 +284,7 @@ export default function Player({ isVisible, closeModal }: {
                     }} onPress={() => setShowQueue(false)}>
                         <Ionicons name="chevron-down-outline" size={24} color="white" />
                     </Pressable>
-                    <FlatList
-                        initialNumToRender={16}
+                    <FlashList
                         data={queue}
 
                         keyExtractor={(data) => data.id.toString()}
@@ -295,7 +295,7 @@ export default function Player({ isVisible, closeModal }: {
                                     musicState.setCurrentQueueIndex(index)
                                     musicState.startPlayer()
                                 }}
-                                style={{ display: "flex", flexDirection: "row" }}>
+                                style={{ display: "flex", flexDirection: "row", marginBottom: 16 }}>
                                 <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>
                                     <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
                                     <Text style={globalStyles.text}>{item.name}</Text>
@@ -303,9 +303,6 @@ export default function Player({ isVisible, closeModal }: {
                             </Pressable>
                         )}
 
-                        contentContainerStyle={{
-                            gap: 16
-                        }}
                         style={{
                             width: "100%"
                         }}
