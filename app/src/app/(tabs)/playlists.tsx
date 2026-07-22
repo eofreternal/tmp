@@ -11,39 +11,46 @@ import { Link } from "expo-router";
 import CreatePlaylist from "@/components/createPlaylist"
 import { useEffect, useState } from "react";
 import { Song } from "@/state/music";
+import { InferSelectModel } from "drizzle-orm";
 
 export default function PlaylistsPage() {
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false)
 
-    const { data: playlists } = useLiveQuery(db.select().from(schema.playlistTable))
+    const [playlists, setPlaylists] = useState<InferSelectModel<typeof schema.playlistTable>[]>([])
     const [firstSongInEachPlaylist, setFirstSongInEachPlaylist] = useState(new Map<number, Song>())
 
     useEffect(() => {
-        playlists.forEach(async item => {
-            const firstSong = await db.query.playlistSongsJunctionTable.findFirst({
-                where: {
-                    playlistId: item.id
-                },
+        async function temp() {
+            const p = await db.select().from(schema.playlistTable)
+            setPlaylists(p)
 
-                with: {
-                    songData: true
-                },
+            p.forEach(async item => {
+                const firstSong = await db.query.playlistSongsJunctionTable.findFirst({
+                    where: {
+                        playlistId: item.id
+                    },
 
-                orderBy: {
-                    dateAdded: "asc"
+                    with: {
+                        songData: true
+                    },
+
+                    orderBy: {
+                        dateAdded: "asc"
+                    }
+                })
+                if (firstSong === undefined) {
+                    return
                 }
-            })
-            if (firstSong === undefined) {
-                return
-            }
 
-            setFirstSongInEachPlaylist((old) => {
-                const newMap = new Map(old)
-                newMap.set(item.id, firstSong.songData!)
-                return newMap
+                setFirstSongInEachPlaylist((old) => {
+                    const newMap = new Map(old)
+                    newMap.set(item.id, firstSong.songData!)
+                    return newMap
+                })
             })
-        })
-    }, playlists)
+        }
+        temp()
+    }, [])
 
     return (
         <SafeAreaView style={[globalStyles.view]}>
