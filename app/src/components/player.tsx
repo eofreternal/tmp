@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable } from "react-native"
+import { Image, View, Text, Pressable, BackHandler } from "react-native"
 import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
@@ -56,6 +56,19 @@ export default function Player({ isVisible, closeModal }: {
     }
 
     useEffect(() => {
+        if (isVisible == false) {
+            return
+        }
+
+        const listener = BackHandler.addEventListener("hardwareBackPress", () => {
+            closeModal();
+            return true;
+        })
+
+        return () => listener.remove()
+    }, [isVisible, closeModal])
+
+    useEffect(() => {
         // If I don't do this wacky thing and use player.paused directly in the JSX, there will be this weird flickering when the user is seeking
         if (seeking == false) {
             setPaused(player.paused)
@@ -91,6 +104,8 @@ export default function Player({ isVisible, closeModal }: {
         opacity: queueOpacity.value,
         transform: [{ translateY: queueTranslateY.value }]
     }))
+
+
 
     if (currentSong === undefined) {
         return <></>
