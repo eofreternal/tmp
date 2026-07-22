@@ -3,18 +3,20 @@ import { FlashList } from "@shopify/flash-list"
 
 import { globalStyles } from "@/styles/global"
 
-import { BottomSheet, Button, Host } from "@expo/ui"
+import { BottomSheet, Button } from "@expo/ui"
 
 import useMusic, { Song } from "@/state/music"
 
 import Entypo from "@react-native-vector-icons/entypo";
 import { useState } from "react";
+import AddToPlaylist from "@/components/addToPlaylist";
 
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
     const [selectedSong, setSelectedSong] = useState<Song | null>(null)
     const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
+    const [showPlaylists, setShowPlaylists] = useState(false)
 
     return (
         <View style={[globalStyles.view]}>
@@ -73,7 +75,17 @@ export default function SongsScreen() {
                     }
                     musicState.addSongToQueue(selectedSong)
                 }} label="Add to queue" />
+
+                <Button onPress={() => {
+                    if (selectedSong === null) {
+                        //TODO: throw and error
+                        return
+                    }
+                    setShowPlaylists(true)
+                }} label="Add to playlist" />
             </BottomSheet>
+
+            <AddToPlaylist show={showPlaylists} songId={selectedSong?.id} onClose={() => setShowPlaylists(false)} />
         </View>
     );
 }
