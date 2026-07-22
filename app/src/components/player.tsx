@@ -3,7 +3,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import Slider from '@expo/ui/community/slider';
+import Slider from '@react-native-community/slider';
 
 import useMusic from "@/state/music"
 import { colors, globalStyles } from "@/styles/global"
@@ -22,7 +22,6 @@ export default function Player({ isVisible, closeModal }: {
     const [showMenu, setShowMenu] = useState(false)
 
     const musicState = useMusic((state) => state)
-
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.queue[state.currentQueueIndex])
     const queue = useMusic((state) => state.queue)
@@ -34,22 +33,31 @@ export default function Player({ isVisible, closeModal }: {
     const queueOpacity = useSharedValue(0)
     const queueTranslateY = useSharedValue(0)
 
+    const [seeking, setSeeking] = useState(false)
+    const [seekingTime, setSeekingTime] = useState(0)
+    const [paused, setPaused] = useState(false)
+
     function handlePlayPause() {
         if (player.paused) {
             // There's a slight bit of inaccuracy between the currentTime and the duration of the song
             // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
             const difference = Math.abs(player.duration - player.currentTime)
+            console.log(difference)
             if (difference < 0.2) {
                 player.seekTo(0)
             }
 
-            musicState.startPlayer()
+            player.play()
             return
         }
 
-        musicState.stopPlayer()
+        player.pause()
     }
 
+    useEffect(() => {
+        // If I don't do this wacky thing and use player.paused directly in the JSX, there will be this weird flickering when the user is seeking
+        setPaused(player.paused)
+    }, [player.paused])
 
     useEffect(() => {
         if (isVisible) {
@@ -154,6 +162,8 @@ export default function Player({ isVisible, closeModal }: {
                     <View style={{
                         display: "flex",
                         flexDirection: "column",
+
+                        gap: 16
                     }}>
                         <View style={[{
                             display: "flex",
@@ -164,37 +174,40 @@ export default function Player({ isVisible, closeModal }: {
                             bottom: 0,
 
                             flexGrow: 0,
-                            flexShrink: 1
+                            flexShrink: 1,
+
+                            alignItems: "center"
                         }]}>
                             <View style={{
                                 display: "flex",
                                 flexDirection: "column",
-
-                                gap: 8
+                                width: "100%"
                             }}>
-                                <Text style={[{
-                                    textAlign: "left",
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
 
-                                    fontSize: 20,
-                                    fontWeight: "800"
-                                }, globalStyles.text]}>{currentSong.name}</Text>
+                                    gap: 16,
+                                    alignItems: "center"
+                                }}>
+                                    <Text style={[{
+                                        textAlign: "left",
+
+                                        fontSize: 20,
+                                        fontWeight: "800"
+                                    }, globalStyles.text]}>{currentSong.name}</Text>
+                                    <Pressable onPress={() => { setShowMenu(true) }}>
+                                        <Entypo name="dots-three-vertical" size={18} color="white" />
+                                    </Pressable>
+                                </View>
+
                                 <Text style={[{
                                     textAlign: "left",
 
                                     fontSize: 16,
                                     fontWeight: "600"
-                                }, globalStyles.secondaryText]}>{currentSong.artist}</Text>
-                            </View>
-
-                            <View style={{
-                                display: "flex",
-                                flexDirection: "row",
-
-                                gap: 16
-                            }}>
-                                <Pressable onPress={() => { setShowMenu(true) }}>
-                                    <Entypo name="dots-three-vertical" size={24} color="white" />
-                                </Pressable>
+                                }, globalStyles.secondaryText]}>{(currentSong.artist.trim() == "") ? "(No Artist)" : currentSong.artist}</Text>
                             </View>
                         </View>
 
@@ -213,7 +226,7 @@ export default function Player({ isVisible, closeModal }: {
                                     padding: 8,
                                     alignSelf: 'flex-start'
                                 }}>
-                                {player.paused ? <Ionicons name="play" size={36} color={colors.background} /> : <Ionicons name="pause" size={36} color={colors.background} />}
+                                {paused ? <Ionicons name="play" size={36} color={colors.background} /> : <Ionicons name="pause" size={36} color={colors.background} />}
                             </Pressable>
 
                             <View style={{
@@ -225,9 +238,27 @@ export default function Player({ isVisible, closeModal }: {
 
                                 maxWidth: 400
                             }}>
-                                <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.currentTime)}</Text>
+                                <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
                                 <View style={{ flex: 1 }}>
-                                    <Slider style={{ width: "100%" }} lowerLimit={0} value={status.currentTime} maximumValue={status.duration} />
+                                    <Slider
+                                        style={{ width: "100%" }}
+                                        lowerLimit={0}
+                                        value={(seeking === false) ? status.currentTime : seekingTime}
+                                        maximumValue={status.duration}
+                                        minimumTrackTintColor="#81cfff"
+                                        thumbTintColor="#81cfff"
+                                        maximumTrackTintColor="#FFFFFF"
+
+                                        onValueChange={(e) => {
+                                            setSeeking(true)
+                                            setSeekingTime(e)
+                                        }}
+
+                                        onSlidingComplete={async (e) => {
+                                            await player.seekTo(e)
+                                            setSeeking(false)
+                                        }}
+                                    />
                                 </View>
                                 <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.duration)}</Text>
                             </View>
