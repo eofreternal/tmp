@@ -56,7 +56,10 @@ export default function Player({ isVisible, closeModal }: {
 
     useEffect(() => {
         // If I don't do this wacky thing and use player.paused directly in the JSX, there will be this weird flickering when the user is seeking
-        setPaused(player.paused)
+        if (seeking == false) {
+            setPaused(player.paused)
+            console.log(player.paused)
+        }
     }, [player.paused])
 
     useEffect(() => {
