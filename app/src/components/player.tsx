@@ -3,6 +3,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons";
 import Slider from '@react-native-community/slider';
 
 import useMusic from "@/state/music"
@@ -221,16 +222,44 @@ export default function Player({ isVisible, closeModal }: {
                             width: 400,
                             gap: 16
                         }}>
-                            <Pressable
-                                onPress={() => { handlePlayPause() }}
-                                style={{
-                                    backgroundColor: "#81cfff",
-                                    borderRadius: 50,
-                                    padding: 8,
-                                    alignSelf: 'flex-start'
-                                }}>
-                                {paused ? <Ionicons name="play" size={36} color={colors.background} /> : <Ionicons name="pause" size={36} color={colors.background} />}
-                            </Pressable>
+                            <View style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 8
+                            }}>
+                                <Pressable
+                                    onPress={() => { handlePlayPause() }}
+                                    style={{
+                                        backgroundColor: "#81cfff",
+                                        borderRadius: 50,
+                                        padding: 8,
+                                        alignSelf: 'flex-start'
+                                    }}>
+                                    {paused ? <Ionicons name="play" size={28} color={colors.background} /> : <Ionicons name="pause" size={28} color={colors.background} />}
+                                </Pressable>
+
+                                <Pressable
+                                    onPress={() => musicState.previousSong()}
+                                    style={{
+                                        backgroundColor: "#81cfff",
+                                        borderRadius: 50,
+                                        padding: 8,
+                                        alignSelf: 'flex-start'
+                                    }}>
+                                    <MaterialDesignIcons size={28} name="skip-previous" color={colors.background} />
+                                </Pressable>
+
+                                <Pressable
+                                    onPress={() => musicState.nextSong()}
+                                    style={{
+                                        backgroundColor: "#81cfff",
+                                        borderRadius: 50,
+                                        padding: 8,
+                                        alignSelf: 'flex-start'
+                                    }}>
+                                    <MaterialDesignIcons size={28} name="skip-next" color={colors.background} />
+                                </Pressable>
+                            </View>
 
                             <View style={{
                                 display: "flex",
