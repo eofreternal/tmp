@@ -1,6 +1,6 @@
 import { globalStyles } from "@/styles/global"
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text } from "react-native"
+import { Image, Text, View } from "react-native"
 
 import { useLiveQuery } from "drizzle-orm/expo-sqlite"
 import { db } from "@/db/index"
@@ -9,12 +9,41 @@ import { FlatList } from "react-native";
 import { Link } from "expo-router";
 
 import CreatePlaylist from "@/components/createPlaylist"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Song } from "@/state/music";
 
 export default function PlaylistsPage() {
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false)
 
     const { data: playlists } = useLiveQuery(db.select().from(schema.playlistTable))
+    const [firstSongInEachPlaylist, setFirstSongInEachPlaylist] = useState(new Map<number, Song>())
+
+    useEffect(() => {
+        playlists.forEach(async item => {
+            const firstSong = await db.query.playlistSongsJunctionTable.findFirst({
+                where: {
+                    playlistId: item.id
+                },
+
+                with: {
+                    songData: true
+                },
+
+                orderBy: {
+                    dateAdded: "asc"
+                }
+            })
+            if (firstSong === undefined) {
+                return
+            }
+
+            setFirstSongInEachPlaylist((old) => {
+                const newMap = new Map(old)
+                newMap.set(item.id, firstSong.songData!)
+                return newMap
+            })
+        })
+    }, playlists)
 
     return (
         <SafeAreaView style={[globalStyles.view]}>
@@ -24,9 +53,18 @@ export default function PlaylistsPage() {
                 keyExtractor={(data) => data.id.toString()}
 
                 renderItem={({ item }) => (
-                    <Link href={{ pathname: "/playlist/[id]", params: { id: item.id.toString() } }} style={globalStyles.text}>
-                        {item.name}
-                    </Link>
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 8,
+
+                        alignItems: "center"
+                    }}>
+                        <Image source={{ uri: firstSongInEachPlaylist.get(item.id)?.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                        <Link href={{ pathname: "/playlist/[id]", params: { id: item.id.toString() } }} style={globalStyles.text}>
+                            {item.name}
+                        </Link>
+                    </View>
                 )}
 
                 contentContainerStyle={{
