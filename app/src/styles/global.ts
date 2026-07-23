@@ -18,10 +18,9 @@ export const colors = {
 
     accent: "#81cfff",
 
-    text: "#DAE2F9",
-    mutedText: "#dae2f9b3"
+    light: "#DAE2F9",
+    mutedLight: "#dae2f9b3"
 }
-console.log(Color.android.dynamic.surface)
 
 export const globalStyles = StyleSheet.create({
     view: {
@@ -29,10 +28,10 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.background
     },
     text: {
-        color: colors.text
+        color: colors.light
     },
     mutedText: {
-        color: colors.mutedText
+        color: colors.mutedLight
     },
     accentText: {
         color: colors.accent

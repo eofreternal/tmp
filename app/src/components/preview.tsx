@@ -3,6 +3,7 @@ import { colors, globalStyles } from "@/styles/global"
 import { View, Text, Image, Pressable } from "react-native"
 import { useAudioPlayerStatus } from "expo-audio"
 import { secondsToFormattedText } from "@/util"
+import Ionicons from "@react-native-vector-icons/ionicons"
 
 export default function Preview() {
     const setShowPlayer = useMusic((state) => state.setShowPlayer)
@@ -38,7 +39,25 @@ export default function Preview() {
                             <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
                             <Text style={globalStyles.text}>{currentSong.name}</Text>
                         </View>
-                        <Text style={globalStyles.text}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
+
+                        <Pressable style={{
+                            display: "flex",
+                            flexDirection: "column",
+
+                            alignItems: "center"
+                        }}
+                            onPress={() => {
+                                if (player.paused) {
+                                    player.play()
+                                } else {
+                                    player.pause()
+                                }
+                            }}>
+                            {player.paused ? <Ionicons name="play" size={28} color={colors.light} /> : <Ionicons name="pause" size={28} color={colors.light} />}
+                            <Text style={[{
+                                fontSize: 10
+                            }, globalStyles.text]}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
+                        </Pressable>
                     </View>
                 </Pressable>
             </>) : <></>
