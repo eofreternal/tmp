@@ -285,7 +285,7 @@ export default function Player({ isVisible, closeModal }: {
 
                                 maxWidth: 400
                             }}>
-                                <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
+                                <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
                                 <View style={{ flex: 1 }}>
                                     <Slider
                                         style={{
@@ -310,7 +310,7 @@ export default function Player({ isVisible, closeModal }: {
                                         }}
                                     />
                                 </View>
-                                <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText(status.duration)}</Text>
+                                <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText(status.duration)}</Text>
                             </View>
 
                             <View style={{
