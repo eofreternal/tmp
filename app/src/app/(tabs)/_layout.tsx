@@ -21,7 +21,7 @@ export default function RootLayout() {
 
                 screenOptions={{
                     tabBarStyle: {
-                        backgroundColor: "#1d1d1d"
+                        backgroundColor: colors.secondary
                     },
                     tabBarInactiveTintColor: "#c1c7ce",
 

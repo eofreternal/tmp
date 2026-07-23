@@ -1,4 +1,4 @@
-import { Image, View, Text, Pressable, BackHandler } from "react-native"
+import { Image, View, Text, Pressable, BackHandler, Platform } from "react-native"
 import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
@@ -226,7 +226,7 @@ export default function Player({ isVisible, closeModal }: {
 
                                     fontSize: 16,
                                     fontWeight: "600"
-                                }, globalStyles.secondaryText]}>{(currentSong.artist.trim() == "") ? "(No Artist)" : currentSong.artist}</Text>
+                                }, globalStyles.mutedText]}>{(currentSong.artist.trim() == "") ? "(No Artist)" : currentSong.artist}</Text>
                             </View>
                         </View>
 
@@ -316,6 +316,7 @@ export default function Player({ isVisible, closeModal }: {
                             <View style={{
                                 display: "flex",
                                 flexDirection: "row",
+                                gap: 16,
 
                                 alignItems: "flex-start"
                             }}>
@@ -324,6 +325,15 @@ export default function Player({ isVisible, closeModal }: {
                                     borderWidth: 1,
                                 }}>
                                     <Text style={globalStyles.accentText}>Playing {currentQueueIndex + 1} of {queue.length}</Text>
+                                </Pressable>
+
+                                <Pressable onPress={() => {
+                                    musicState.setLoop(!musicState.loop)
+                                }} style={{
+                                    borderColor: "red",
+                                    borderWidth: 1,
+                                }}>
+                                    <Entypo name="loop" size={28} color={colors.text} />
                                 </Pressable>
                             </View>
                         </View>

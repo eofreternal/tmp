@@ -24,11 +24,7 @@ export default function Preview() {
 
                         alignItems: "center",
 
-                        //debugging
-                        borderColor: "red",
-                        borderWidth: 1,
-
-                        backgroundColor: colors.background
+                        backgroundColor: colors.secondary
                     }}>
                         <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
                         <Text style={globalStyles.text}>{currentSong.name}</Text>
