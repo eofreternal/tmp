@@ -98,7 +98,7 @@ export default function Layout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleStyle: { color: colors.text }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleStyle: { color: colors.light }, headerTitleAlign: "center" }} />
 
         <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
       </Stack>

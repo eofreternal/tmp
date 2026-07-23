@@ -28,7 +28,7 @@ export default function RootLayout() {
                     headerStyle: {
                         backgroundColor: colors.background
                     },
-                    headerTintColor: colors.text,
+                    headerTintColor: colors.light,
                     headerTitleAlign: "center",
 
                     headerLeft: () => (<Pressable style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
