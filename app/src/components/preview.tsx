@@ -18,7 +18,9 @@ export default function Preview() {
                         position: "fixed",
                         display: "flex",
                         flexDirection: "row",
-                        gap: 8,
+                        justifyContent: "space-between",
+                        gap: 12,
+                        padding: 10,
 
                         bottom: 0,
 
@@ -26,8 +28,16 @@ export default function Preview() {
 
                         backgroundColor: colors.secondary
                     }}>
-                        <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
-                        <Text style={globalStyles.text}>{currentSong.name}</Text>
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: 12,
+
+                            alignItems: "center"
+                        }}>
+                            <Image source={{ uri: currentSong.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                            <Text style={globalStyles.text}>{currentSong.name}</Text>
+                        </View>
                         <Text style={globalStyles.text}>{secondsToFormattedText(status.currentTime)} / {secondsToFormattedText(status.duration)}</Text>
                     </View>
                 </Pressable>
