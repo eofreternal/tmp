@@ -7,6 +7,7 @@ export type Song = InferSelectModel<typeof schema.songsTable>
 
 const useMusicStore = create<{
     showPlayer: boolean,
+    loop: boolean,
     player: AudioPlayer,
     songs: Song[],
     queue: Song[],
@@ -23,9 +24,11 @@ const useMusicStore = create<{
     stopPlayer: () => void,
 
     nextSong: () => void,
-    previousSong: () => void
+    previousSong: () => void,
+    setLoop: (loop: boolean) => void
 }>((set, get) => ({
     showPlayer: false,
+    loop: false,
     player: createAudioPlayer(null, {
         updateInterval: 100
     }),
@@ -53,7 +56,12 @@ const useMusicStore = create<{
 
         player.addListener("playbackStatusUpdate", (status) => {
             if (status.didJustFinish) {
-                nextSong()
+                const { loop } = get()
+                if (loop) {
+                    player.seekTo(0)
+                } else {
+                    nextSong()
+                }
             }
         })
     },
@@ -86,7 +94,8 @@ const useMusicStore = create<{
         player.replace({ uri: song.uri })
         player.play()
         set((currentState) => ({ currentQueueIndex: currentState.currentQueueIndex - 1 }))
-    }
+    },
+    setLoop: (loop: boolean) => set((_currentState) => ({ loop: loop }))
 }));
 
 export default useMusicStore;

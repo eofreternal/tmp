@@ -333,7 +333,7 @@ export default function Player({ isVisible, closeModal }: {
                                     borderColor: "red",
                                     borderWidth: 1,
                                 }}>
-                                    <Entypo name="loop" size={28} color={colors.light} />
+                                    <Entypo name="loop" size={28} color={musicState.loop ? colors.accent : colors.light} />
                                 </Pressable>
                             </View>
                         </View>
