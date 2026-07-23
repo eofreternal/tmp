@@ -5,6 +5,25 @@ import { InferSelectModel } from "drizzle-orm";
 
 export type Song = InferSelectModel<typeof schema.songsTable>
 
+const setupPlayer = (get: () => any) => {
+    const player = createAudioPlayer(null, {
+        updateInterval: 100
+    })
+
+    player.addListener("playbackStatusUpdate", (status) => {
+        if (status.didJustFinish) {
+            const { loop, nextSong } = get()
+            if (loop) {
+                player.seekTo(0)
+            } else {
+                nextSong()
+            }
+        }
+    })
+
+    return player
+}
+
 const useMusicStore = create<{
     showPlayer: boolean,
     loop: boolean,
@@ -29,9 +48,7 @@ const useMusicStore = create<{
 }>((set, get) => ({
     showPlayer: false,
     loop: false,
-    player: createAudioPlayer(null, {
-        updateInterval: 100
-    }),
+    player: setupPlayer(get),
     songs: [],
     queue: [],
     currentQueueIndex: 0,
@@ -44,7 +61,7 @@ const useMusicStore = create<{
     setCurrentQueueIndex: (index) => set((currentState) => ({ currentQueueIndex: index })),
 
     startPlayer: () => {
-        const { player, queue, currentQueueIndex, nextSong } = get()
+        const { player, queue, currentQueueIndex } = get()
 
         const song = queue[currentQueueIndex]
         if (song === undefined) {
@@ -53,17 +70,6 @@ const useMusicStore = create<{
 
         player.replace({ uri: song.uri })
         player.play()
-
-        player.addListener("playbackStatusUpdate", (status) => {
-            if (status.didJustFinish) {
-                const { loop } = get()
-                if (loop) {
-                    player.seekTo(0)
-                } else {
-                    nextSong()
-                }
-            }
-        })
     },
     stopPlayer: () => {
         const { player } = get()
