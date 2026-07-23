@@ -288,7 +288,10 @@ export default function Player({ isVisible, closeModal }: {
                                 <Text style={[globalStyles.text, { width: 30 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
                                 <View style={{ flex: 1 }}>
                                     <Slider
-                                        style={{ width: "100%" }}
+                                        style={{
+                                            marginLeft: Platform.select({ ios: 0, android: -15 }),
+                                            marginRight: Platform.select({ ios: 0, android: -15 })
+                                        }}
                                         lowerLimit={0}
                                         value={(seeking === false) ? status.currentTime : seekingTime}
                                         maximumValue={status.duration}
