@@ -8,7 +8,7 @@ import { globalStyles } from "@/styles/global";
 import AddToPlaylist from "./addToPlaylist";
 
 
-export default function songThreeDotMenu({ show, songId, onClose }: { show: boolean, songId: number, onClose: () => void }) {
+export default function PlayerThreeDotMenu({ show, songId, onClose }: { show: boolean, songId: number, onClose: () => void }) {
     const [showPlaylists, setShowPlaylists] = useState(false)
 
     return (

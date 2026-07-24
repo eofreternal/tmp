@@ -14,7 +14,7 @@ import { secondsToFormattedText } from "@/util";
 import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { useEffect, useState } from "react";
 
-import SongThreeDotMenu from "@/components/songThreeDotMenu";
+import PlayerThreeDotMenu from "@/components/playerThreeDotMenu";
 
 export default function Player({ isVisible, closeModal }: {
     isVisible: boolean, closeModal: () => void
@@ -341,7 +341,7 @@ export default function Player({ isVisible, closeModal }: {
                 </SafeAreaView>
             </Animated.View>
 
-            <SongThreeDotMenu show={showMenu} songId={currentSong.id} onClose={() => setShowMenu(false)} />
+            <PlayerThreeDotMenu show={showMenu} songId={currentSong.id} onClose={() => setShowMenu(false)} />
             <Animated.View
                 pointerEvents={showQueue ? "auto" : "none"}
 
