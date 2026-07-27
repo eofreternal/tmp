@@ -58,7 +58,7 @@ export default function playlistIdPage() {
             <SafeAreaView style={globalStyles.view}>
                 <Stack.Screen options={{
                     title: playlistData.name,
-                    headerTintColor: colors.text,
+                    headerTintColor: colors.light,
                     headerRight: () => (
                         <Pressable onPress={() => setShowOptions(true)}>
                             <Entypo name="dots-three-vertical" size={24} color="white" />
