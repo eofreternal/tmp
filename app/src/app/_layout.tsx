@@ -70,7 +70,6 @@ export default function Layout() {
     async function main() {
       songsInDb = await db.select({ uri: schema.songsTable.uri, lastModified: schema.songsTable.lastModified }).from(schema.songsTable)
 
-      //TODO: clean up old songs that aren't in the music folder anymroe
       // const process = []
       const uri = await getOrRequestMusicFolder()
       const directory = new FileSystem.Directory(uri)
@@ -90,6 +89,13 @@ export default function Layout() {
       const allSongs = await db.select().from(schema.songsTable)
       allSongs.sort((a, b) => a.name.localeCompare(b.name))
       for (const song of allSongs) {
+        //clean up old songs that don't exist anymore. Maybe the user deleted the song or something
+        const testingFile = new FileSystem.File(song.uri)
+        if (testingFile.exists === false) {
+          await db.delete(schema.songsTable).where(eq(schema.songsTable.id, song.id))
+          continue
+        }
+
         musicState.addSong(song)
       }
       SplashScreen.hide();
