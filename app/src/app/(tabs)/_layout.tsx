@@ -8,7 +8,11 @@ import Entypo from "@react-native-vector-icons/entypo";
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import Preview from "@/components/preview";
 
+import useOtherState from "@/state/otherState";
+
 export default function RootLayout() {
+    const otherState = useOtherState((state) => state)
+
     return (
         <>
             <Tabs
@@ -31,8 +35,7 @@ export default function RootLayout() {
                     headerTintColor: colors.light,
                     headerTitleAlign: "center",
 
-                    headerLeft: () => (<Pressable style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
-
+                    headerLeft: () => (<Pressable onPress={() => otherState.setSearch(true)} style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
                 }}>
                 <Tabs.Screen name="index" options={{
                     title: "Home",

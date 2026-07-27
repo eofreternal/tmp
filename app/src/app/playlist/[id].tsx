@@ -71,9 +71,9 @@ export default function playlistIdPage() {
                     data={playlistData.songs}
 
                     renderItem={({ item }) => (
-                        <Pressable onPress={() => {
+                        <Pressable onPress={async () => {
                             musicState.clearQueue()
-                            musicState.addSongToQueue(item)
+                            await musicState.addSongToQueue(item.id)
                             musicState.startPlayer()
                         }} style={{ display: "flex", flexDirection: "row" }}>
                             <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>

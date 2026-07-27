@@ -2,6 +2,7 @@ import { AudioPlayer, createAudioPlayer } from "expo-audio";
 import { create } from "zustand";
 import * as schema from "@/db/schema"
 import { InferSelectModel } from "drizzle-orm";
+import { db } from "@/db";
 
 export type Song = InferSelectModel<typeof schema.songsTable>
 
@@ -36,7 +37,7 @@ const useMusicStore = create<{
     addSong: (song: Song) => void
 
     clearQueue: () => void,
-    addSongToQueue: (song: Song) => void,
+    addSongToQueue: (songId: number) => Promise<void>,
     setCurrentQueueIndex: (index: number) => void,
 
     startPlayer: () => void,
@@ -57,7 +58,20 @@ const useMusicStore = create<{
     addSong: (song) => set((currentState) => ({ songs: [...currentState.songs, song] })),
 
     clearQueue: () => set((_currentState) => ({ queue: [], currentQueueIndex: 0 })),
-    addSongToQueue: (song) => set((currentState) => ({ queue: [...currentState.queue, song] })),
+    addSongToQueue: async (songId) => {
+        const songData = await db.query.songsTable.findFirst({
+            where: {
+                id: songId
+            }
+        })
+
+        if (songData === undefined) {
+            //TODO: throw error or something
+            return
+        }
+
+        return set((currentState) => ({ queue: [...currentState.queue, songData] }))
+    },
     setCurrentQueueIndex: (index) => set((currentState) => ({ currentQueueIndex: index })),
 
     startPlayer: () => {

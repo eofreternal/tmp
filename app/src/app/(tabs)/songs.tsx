@@ -11,6 +11,8 @@ import Entypo from "@react-native-vector-icons/entypo";
 import { useState } from "react";
 import AddToPlaylist from "@/components/addToPlaylist";
 
+import SongThreeDotMenu from "@/components/songThreeDotMenu";
+
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
@@ -25,9 +27,9 @@ export default function SongsScreen() {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Pressable
-                        onPress={() => {
+                        onPress={async () => {
                             musicState.clearQueue()
-                            musicState.addSongToQueue(item)
+                            await musicState.addSongToQueue(item.id)
                             musicState.setCurrentQueueIndex(0)
                             musicState.startPlayer()
                         }}
@@ -66,26 +68,7 @@ export default function SongsScreen() {
                     padding: 10
                 }}
             />
-
-            <BottomSheet isPresented={showThreeDotMenu} onDismiss={() => setShowThreeDotMenu(false)}>
-                <Button onPress={() => {
-                    if (selectedSong === null) {
-                        //TODO: throw and error
-                        return
-                    }
-                    musicState.addSongToQueue(selectedSong)
-                }} label="Add to queue" />
-
-                <Button onPress={() => {
-                    if (selectedSong === null) {
-                        //TODO: throw and error
-                        return
-                    }
-                    setShowPlaylists(true)
-                }} label="Add to playlist" />
-            </BottomSheet>
-
-            <AddToPlaylist show={showPlaylists} songId={selectedSong?.id} onClose={() => setShowPlaylists(false)} />
+            <SongThreeDotMenu show={showThreeDotMenu} selectedSong={selectedSong} onClose={() => setShowThreeDotMenu(false)} />
         </View>
     );
 }

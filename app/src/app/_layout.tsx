@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
 import * as FileSystem from "expo-file-system"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { db } from "@/db/index"
 import * as schema from "@/db/schema"
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
@@ -10,9 +10,11 @@ import { getMetadata, getOrRequestMusicFolder, saveArtwork } from "@/util";
 
 import { eq, InferInsertModel } from "drizzle-orm"
 import useMusic from "@/state/music"
+import useOtherState from '@/state/otherState';
 
 import * as SplashScreen from 'expo-splash-screen';
 import Player from '@/components/player';
+import Search from "@/components/search"
 
 import { LogBox } from 'react-native';
 import { colors } from '@/styles/global';
@@ -57,6 +59,8 @@ async function handleFile(file: FileSystem.File) {
 export default function Layout() {
   const musicState = useMusic((state) => state)
   const { success, error } = useMigrations(db, migrations);
+
+  const otherState = useOtherState((state) => state)
 
   useEffect(() => {
     if (success === false) {
@@ -103,6 +107,7 @@ export default function Layout() {
         <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
       </Stack>
 
+      {otherState.search ? <Search show={true} onClose={() => otherState.setSearch(false)} /> : <></>}
       <Player isVisible={musicState.showPlayer} closeModal={() => { musicState.setShowPlayer(false) }} /></>
   );
 }

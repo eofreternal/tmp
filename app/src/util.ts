@@ -10,6 +10,9 @@ import { getAudioMetadata } from '@missingcore/audio-metadata';
 import 'react-native-get-random-values'
 import { nanoid } from 'nanoid'
 
+import { db } from "@/db/index"
+import * as schema from "@/db/schema"
+
 const MUSIC_FOLDER = 'music_folder';
 
 export async function getOrRequestMusicFolder() {
@@ -72,4 +75,40 @@ export function secondsToFormattedText(time: number) {
     const minutes = parseInt((time / 60).toString())
 
     return `${minutes}:${seconds}`
+}
+
+export async function fetchPlaylists() {
+    const p = await db.select().from(schema.playlistTable)
+    const playlistPopulated: {
+        id: number
+        name: string
+        coverArtUri: string | null
+    }[] = []
+
+    p.forEach(async item => {
+        const firstSong = await db.query.playlistSongsJunctionTable.findFirst({
+            where: {
+                playlistId: item.id
+            },
+
+            with: {
+                songData: true
+            },
+
+            orderBy: {
+                dateAdded: "asc"
+            }
+        })
+        if (firstSong === undefined) {
+            return
+        }
+
+        playlistPopulated.push({
+            id: item.id,
+            name: item.name,
+            coverArtUri: firstSong.songData?.coverArtUri || null
+        })
+    })
+
+    return playlistPopulated
 }
