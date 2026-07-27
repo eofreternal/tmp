@@ -68,7 +68,7 @@ export default function SongsScreen() {
                     padding: 10
                 }}
             />
-            <SongThreeDotMenu show={showThreeDotMenu} selectedSong={selectedSong} onClose={() => setShowThreeDotMenu(false)} />
+            <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
         </View>
     );
 }
