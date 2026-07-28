@@ -142,6 +142,7 @@ export default function Player({ isVisible, closeModal }: {
                 <SafeAreaView style={[{
                     display: "flex",
                     flexDirection: "column",
+                    flex: 1,
 
                     alignItems: "center",
                     padding: 16
@@ -165,17 +166,18 @@ export default function Player({ isVisible, closeModal }: {
                         alignItems: "center",
 
                         width: "100%",
-                        maxHeight: "66%",
-
-                        flexGrow: 1,
-                        flexShrink: 1,
-                        flexBasis: "auto"
+                        flex: 1
                     }}>
-                        <Image source={{ uri: currentSong.coverArtUri || "" }} style={{
-                            aspectRatio: 1,
-                            width: "100%",
-                            borderRadius: 8
-                        }} />
+                        <Image source={{ uri: currentSong.coverArtUri || "" }}
+                            style={{
+                                aspectRatio: 1,
+                                flex: 1,
+                                maxWidth: "100%",
+                                maxHeight: "100%",
+                                borderRadius: 16
+                            }}
+                            resizeMode="contain"
+                        />
                     </View>
 
                     <View style={{
@@ -234,7 +236,7 @@ export default function Player({ isVisible, closeModal }: {
                             display: "flex",
                             flexDirection: "column",
 
-                            width: 400,
+                            width: "100%",
                             gap: 16
                         }}>
                             <View style={{
