@@ -43,6 +43,10 @@ async function handleFile(file: FileSystem.File) {
       uri: file.uri,
       artist: metadata.artist || "",
       coverArtUri: coverArt,
+      year: metadata.year,
+
+      albumTitle: metadata.albumTitle,
+      trackNumber: metadata.trackNumber,
 
       lastModified: new Date(file.lastModified!)
     } satisfies InferInsertModel<typeof schema.songsTable>

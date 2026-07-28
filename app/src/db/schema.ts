@@ -5,7 +5,10 @@ export const songsTable = sqliteTable("songs", {
     id: integer().primaryKey({ autoIncrement: true }),
     name: text().notNull(),
     artist: text().notNull(),
-    year: integer(),
+    year: integer().notNull(),
+
+    albumTitle: text().notNull(),
+    trackNumber: integer().notNull(),
 
     uri: text().notNull(),
     coverArtUri: text(),
