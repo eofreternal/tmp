@@ -41,7 +41,7 @@ async function handleFile(file: FileSystem.File) {
     const data = {
       name: metadata.title || file.name.substring(0, file.name.lastIndexOf(".")),
       uri: file.uri,
-      artist: metadata.artist || "",
+      artist: metadata.artist,
       coverArtUri: coverArt,
       year: metadata.year,
 
