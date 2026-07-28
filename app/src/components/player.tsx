@@ -226,7 +226,7 @@ export default function Player({ isVisible, closeModal }: {
 
                                     fontSize: 16,
                                     fontWeight: "600"
-                                }, globalStyles.mutedText]}>{(currentSong.artist.trim() == "") ? "(No Artist)" : currentSong.artist}</Text>
+                                }, globalStyles.mutedText]}>{(currentSong.artist == undefined) ? "(No Artist)" : currentSong.artist}</Text>
                             </View>
                         </View>
 

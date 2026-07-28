@@ -4,11 +4,11 @@ import { defineRelations } from 'drizzle-orm';
 export const songsTable = sqliteTable("songs", {
     id: integer().primaryKey({ autoIncrement: true }),
     name: text().notNull(),
-    artist: text().notNull(),
-    year: integer().notNull(),
+    artist: text(),
+    year: integer(),
 
-    albumTitle: text().notNull(),
-    trackNumber: integer().notNull(),
+    albumTitle: text(),
+    trackNumber: integer(),
 
     uri: text().notNull(),
     coverArtUri: text(),

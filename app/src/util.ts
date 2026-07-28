@@ -41,7 +41,7 @@ export async function getMetadata(uri: string) {
     //@ts-expect-error
     metadata["trackNumber"] = metadata["track"]
 
-    return metadata as { artist: string, albumTitle: string, title: string, trackNumber: number, year: number }
+    return metadata as { artist: string | undefined, albumTitle: string | undefined, title: string | undefined, trackNumber: number | undefined, year: number | undefined }
 }
 
 export async function saveArtwork(uri: string) {
