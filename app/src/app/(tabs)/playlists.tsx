@@ -1,5 +1,4 @@
 import { globalStyles } from "@/styles/global"
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Image, Text, View } from "react-native"
 
 import { FlatList } from "react-native";
@@ -22,7 +21,7 @@ export default function PlaylistsPage() {
     }, [])
 
     return (
-        <SafeAreaView style={[globalStyles.view]}>
+        <View style={[globalStyles.view]}>
             <FlatList
                 initialNumToRender={16}
                 data={playlists}
@@ -68,6 +67,6 @@ export default function PlaylistsPage() {
                 textAlign: "center"
             }, globalStyles.accentText]} onPress={() => setShowCreatePlaylist(true)}>Create a playlist</Text>
             <CreatePlaylist show={showCreatePlaylist} onClose={() => setShowCreatePlaylist(false)} />
-        </SafeAreaView>
+        </View>
     )
 }
