@@ -6,6 +6,7 @@ import { InferSelectModel, eq } from "drizzle-orm"
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, Image, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
@@ -54,7 +55,7 @@ export default function playlistIdPage() {
 
     return (
         <>
-            <View style={globalStyles.view}>
+            <SafeAreaView style={globalStyles.view}>
                 <Stack.Screen options={{
                     title: playlistData.name,
                     headerTintColor: colors.light,
@@ -84,7 +85,7 @@ export default function playlistIdPage() {
                     )}
                 />
                 <Preview />
-            </View>
+            </SafeAreaView>
 
             <BottomSheet isPresented={showOptions} onDismiss={() => setShowOptions(false)}>
                 <Host>
