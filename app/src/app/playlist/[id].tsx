@@ -9,8 +9,6 @@ import { View, Text, Pressable, Image, FlatList } from "react-native";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-
 import useMusic from "@/state/music"
 import { BottomSheet, Button, Column, Host } from "@expo/ui";
 
@@ -55,7 +53,7 @@ export default function playlistIdPage() {
 
     return (
         <>
-            <SafeAreaView style={globalStyles.view}>
+            <View style={globalStyles.view}>
                 <Stack.Screen options={{
                     title: playlistData.name,
                     headerTintColor: colors.light,
@@ -84,7 +82,7 @@ export default function playlistIdPage() {
                         </Pressable>
                     )}
                 />
-            </SafeAreaView>
+            </View>
 
             <BottomSheet isPresented={showOptions} onDismiss={() => setShowOptions(false)}>
                 <Host>
