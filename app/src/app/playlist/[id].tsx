@@ -11,6 +11,7 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 
 import useMusic from "@/state/music"
 import { BottomSheet, Button, Column, Host } from "@expo/ui";
+import Preview from "@/components/preview";
 
 async function deletePlaylist(id: number) {
     router.navigate("/playlists")
@@ -82,6 +83,7 @@ export default function playlistIdPage() {
                         </Pressable>
                     )}
                 />
+                <Preview />
             </View>
 
             <BottomSheet isPresented={showOptions} onDismiss={() => setShowOptions(false)}>
