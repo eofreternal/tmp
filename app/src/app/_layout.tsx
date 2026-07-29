@@ -112,9 +112,9 @@ export default function Layout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleStyle: { color: colors.light }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: colors.background }, headerTitleStyle: { color: colors.light }, headerTitleAlign: "center" }} />
 
-        <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: "#0f0f0f" }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
       </Stack>
 
       {otherState.search ? <Search show={true} onClose={() => otherState.setSearch(false)} /> : <></>}
