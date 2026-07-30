@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import Preview from "@/components/preview"
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 import { fetchAlbums, fetchPlaylists } from "@/util"
+import SongComponent from "@/components/song"
 
 import { router } from "expo-router"
 
@@ -107,44 +108,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
 
     function ResultListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
         if (category == "songs") {
-            return (
-                <Pressable
-                    onPress={async () => {
-                        musicState.clearQueue()
-                        await musicState.addSongToQueue(item.id)
-                        musicState.setCurrentQueueIndex(0)
-                        musicState.startPlayer()
-                        console.log("ehy")
-                    }}
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginBottom: 16
-                    }}>
-                    <View style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "16",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        alignItems: "center"
-                    }}>
-                        <View style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "16",
-                            alignItems: "center"
-                        }}>
-                            <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
-                            <Text style={globalStyles.text}>{item.name}</Text>
-                        </View>
-                        <Entypo onPress={() => {
-                            setSelectedSong(item)
-                            setShowThreeDotMenu(true)
-                        }} name="dots-three-vertical" size={16} color="white" />
-                    </View>
-                </Pressable>
-            )
+            return <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
         } else if (category == "playlists") {
             return (
                 <Pressable

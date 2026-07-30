@@ -5,14 +5,15 @@ import { InferSelectModel, eq } from "drizzle-orm"
 
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, Pressable, Image, FlatList } from "react-native";
+import { Text, Pressable, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@react-native-vector-icons/entypo";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
-import useMusic from "@/state/music"
 import { BottomSheet, Button, Column, Host } from "@expo/ui";
 import Preview from "@/components/preview";
+import SongComponent from "@/components/song";
+import SongThreeDotMenu from "@/components/songThreeDotMenu";
 
 async function deletePlaylist(id: number) {
     router.navigate("/playlists")
@@ -22,7 +23,6 @@ async function deletePlaylist(id: number) {
 export default function playlistIdPage() {
     const [showOptions, setShowOptions] = useState(false)
 
-    const musicState = useMusic((state) => state)
     const { id }: { id: string } = useLocalSearchParams()
     const parsedId = parseInt(id)
 
@@ -32,6 +32,12 @@ export default function playlistIdPage() {
 
         songs: []
     })
+    const [selectedSong, setSelectedSong] = useState<{
+        id: number
+        name: string
+        coverArtUri: string | null
+    } | null>(null)
+    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
 
     useEffect(() => {
         async function d() {
@@ -71,20 +77,12 @@ export default function playlistIdPage() {
                     data={playlistData.songs}
 
                     renderItem={({ item }) => (
-                        <Pressable onPress={async () => {
-                            musicState.clearQueue()
-                            await musicState.addSongToQueue(item.id)
-                            musicState.startPlayer()
-                        }} style={{ display: "flex", flexDirection: "row" }}>
-                            <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>
-                                <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
-                                <Text style={globalStyles.text}>{item.name}</Text>
-                                <Text style={globalStyles.text}>{JSON.stringify(item)}</Text>
-                            </View>
-                        </Pressable>
+                        <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
                     )}
                 />
+
                 <Preview />
+                <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
             </SafeAreaView>
 
             <BottomSheet isPresented={showOptions} onDismiss={() => setShowOptions(false)}>
@@ -92,7 +90,7 @@ export default function playlistIdPage() {
                     <Column spacing={16}>
                         <Button onPress={() => deletePlaylist(playlistData.id)}>
                             <Ionicons name="trash-outline" size={36} color="red" />
-                            <Text>Delete</Text>
+                            <Text>Delete playlist</Text>
                         </Button>
                     </Column>
                 </Host>

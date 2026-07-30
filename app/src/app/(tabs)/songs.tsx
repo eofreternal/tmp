@@ -1,24 +1,22 @@
-import { Text, Pressable, Image, View } from "react-native";
+import { Text, View } from "react-native";
 import { FlashList } from "@shopify/flash-list"
 
 import { globalStyles } from "@/styles/global"
 
-import { BottomSheet, Button } from "@expo/ui"
-
-import useMusic, { Song } from "@/state/music"
-
-import Entypo from "@react-native-vector-icons/entypo";
+import useMusic from "@/state/music"
 import { useState } from "react";
-import AddToPlaylist from "@/components/addToPlaylist";
-
 import SongThreeDotMenu from "@/components/songThreeDotMenu";
+import SongComponent from "@/components/song";
 
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
-    const [selectedSong, setSelectedSong] = useState<Song | null>(null)
+    const [selectedSong, setSelectedSong] = useState<{
+        id: number
+        name: string
+        coverArtUri: string | null
+    } | null>(null)
     const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
-    const [showPlaylists, setShowPlaylists] = useState(false)
 
     return (
         <View style={[globalStyles.view]}>
@@ -26,41 +24,7 @@ export default function SongsScreen() {
                 data={musicState.songs}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Pressable
-                        onPress={async () => {
-                            musicState.clearQueue()
-                            await musicState.addSongToQueue(item.id)
-                            musicState.setCurrentQueueIndex(0)
-                            musicState.startPlayer()
-                        }}
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            marginBottom: 16
-                        }}>
-                        <View style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "16",
-                            justifyContent: "space-between",
-                            width: "100%",
-                            alignItems: "center"
-                        }}>
-                            <View style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: "16",
-                                alignItems: "center"
-                            }}>
-                                <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
-                                <Text style={globalStyles.text}>{item.name}</Text>
-                            </View>
-                            <Entypo onPress={() => {
-                                setSelectedSong(item)
-                                setShowThreeDotMenu(true)
-                            }} name="dots-three-vertical" size={16} color="white" />
-                        </View>
-                    </Pressable>
+                    <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
                 )}
 
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
