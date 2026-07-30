@@ -10,7 +10,7 @@ export default function SongThreeDotMenu({ show, songId, onClose }: { show: bool
 
     return (
         <>
-            <BottomSheet isPresented={show} onDismiss={() => onClose}>
+            <BottomSheet isPresented={show} onDismiss={() => onClose()}>
                 <Button onPress={async () => {
                     if (songId === undefined) {
                         //TODO: throw and error
