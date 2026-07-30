@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid'
 
 import { db } from "@/db/index"
 import * as schema from "@/db/schema"
+import { eq } from "drizzle-orm"
 
 const MUSIC_FOLDER = 'music_folder';
 
@@ -111,4 +112,50 @@ export async function fetchPlaylists() {
     })
 
     return playlistPopulated
+}
+
+export async function fetchAlbums() {
+    const albums = (await db.select({ albumTitle: schema.songsTable.albumTitle, coverArt: schema.songsTable.coverArtUri }).from(schema.songsTable))
+    const albumsDeduped = Array.from(new Set(albums.map((item) => item.albumTitle)))
+
+    const albumCovers: string[] = []
+    albumsDeduped.forEach(async albumName => {
+        const [song] = await fetchSongsInAlbum(albumName!)
+        if (song !== undefined) {
+            albumCovers.push(song.coverArtUri || "")
+        }
+    })
+
+    const combined: {
+        id: number
+        name: string
+        coverArtUri: string
+    }[] = []
+    albumsDeduped.forEach((name, i) => {
+        combined.push({
+            id: i, // this field doesn't actually do anything, it's just to appease search.tsx
+            name: name!,
+            coverArtUri: albumCovers[i]!
+        })
+    })
+
+    return combined
+}
+
+export async function fetchSongsInAlbum(albumName: string) {
+    const allSongs = await db.select().from(schema.songsTable).where(eq(schema.songsTable.albumTitle, albumName));
+    const songsWithATrackNumber = []
+    const songsWithoutATrackNumber = []
+
+    for (const item of allSongs) {
+        if (item.trackNumber !== null) {
+            songsWithATrackNumber.push(item)
+        } else {
+            songsWithoutATrackNumber.push(item)
+        }
+    }
+
+    songsWithoutATrackNumber.sort((a, b) => a.name.localeCompare(b.name))
+
+    return [...songsWithATrackNumber, ...songsWithoutATrackNumber]
 }

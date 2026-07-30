@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react"
+import { useEffect, useState, useMemo, useRef, useLayoutEffect } from "react"
 import { Pressable, View, Text, Image, TextInput } from "react-native"
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated"
 
@@ -11,11 +11,11 @@ import SongThreeDotMenu from "@/components/songThreeDotMenu"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Preview from "@/components/preview"
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
-import { fetchPlaylists } from "@/util"
+import { fetchAlbums, fetchPlaylists } from "@/util"
 
 import { router } from "expo-router"
 
-const searchCategories = ["songs", "playlists"] as const
+const searchCategories = ["songs", "albums", "playlists"] as const
 type Result = {
     id: number
     name: string,
@@ -40,32 +40,35 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
     const musicState = useMusicStore((state) => state)
     const songs = useMusicStore((state) => state.songs)
     const [playlists, setPlaylists] = useState<Awaited<ReturnType<typeof fetchPlaylists>>>([])
+    const [albums, setAlbums] = useState<Awaited<ReturnType<typeof fetchAlbums>>>([])
     useEffect(() => {
         async function temp() {
             setPlaylists(await fetchPlaylists())
+            setAlbums(await fetchAlbums())
         }
         temp()
-    })
+    }, [])
 
     const [selectedSearchCategory, setSelectedSearchCategory] = useState<typeof searchCategories[number]>("songs")
-    const resultsRef = useRef<FlashListRef<Song>>(undefined)
-    const [data, setData] = useState<Result[]>(songs)
-    const [result, setResults] = useState<Result[]>([])
+    const resultsRef = useRef<FlashListRef<Song>>(null)
+    const data = useMemo(() => {
+        if (selectedSearchCategory == "songs") {
+            return songs
+        } else if (selectedSearchCategory == "playlists") {
+            return playlists
+        } else {
+            return albums
+        }
+    }, [selectedSearchCategory])
+    const [results, setResults] = useState<Result[]>([])
     const [searchQuery, setSearchQuery] = useState("")
+    const [selectedSong, setSelectedSong] = useState<Result | null>(null)
+    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
     const debouncedSearchQuery = useDebounce(searchQuery, 300)
-
     const search = useMemo(() => new Fuse(data, {
         keys: ["name"],
         threshold: 0.3
     }), [data])
-
-    useEffect(() => {
-        if (selectedSearchCategory == "songs") {
-            setData(songs)
-        } else if (selectedSearchCategory == "playlists") {
-            setData(playlists)
-        }
-    }, [selectedSearchCategory])
 
     useEffect(() => {
         if (debouncedSearchQuery.trim() == "") {
@@ -81,13 +84,10 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
             coverArtUri: item.item.coverArtUri
         })))
         resultsRef.current?.scrollToIndex({ index: 0, animated: false })
-    }, [debouncedSearchQuery])
+    }, [debouncedSearchQuery, search])
 
     const opacity = useSharedValue(0)
     const translateY = useSharedValue(0)
-
-    const [selectedSong, setSelectedSong] = useState<Result | null>(null)
-    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
 
     useEffect(() => {
         if (show) {
@@ -105,7 +105,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
     }))
 
 
-    function ResultsListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
+    function ResultListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
         if (category == "songs") {
             return (
                 <Pressable
@@ -149,6 +149,36 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
             return (
                 <Pressable
                     onPress={() => router.navigate({ pathname: "/playlist/[id]", params: { id: item.id } })}
+
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 16
+                    }}>
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "16",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        alignItems: "center"
+                    }}>
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "16",
+                            alignItems: "center"
+                        }}>
+                            <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
+                            <Text style={globalStyles.text}>{item.name}</Text>
+                        </View>
+                    </View>
+                </Pressable>
+            )
+        } else if (category == "albums") {
+            return (
+                <Pressable
+                    onPress={() => router.navigate({ pathname: "/album/[name]", params: { name: item.name } })}
 
                     style={{
                         display: "flex",
@@ -271,10 +301,10 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
 
                     <FlashList
                         ref={resultsRef}
-                        data={result}
-                        keyExtractor={(item) => item.id.toString()}
+                        data={results}
+                        keyExtractor={(item) => `${selectedSearchCategory}-${item.id.toString()}`}
 
-                        renderItem={(({ item }) => (<ResultsListItem category={selectedSearchCategory} item={item} />))}
+                        renderItem={(({ item }) => (<ResultListItem category={selectedSearchCategory} item={item} />))}
 
                         contentContainerStyle={{
                             padding: 10

@@ -24,6 +24,7 @@ SplashScreen.preventAutoHideAsync();
 
 let songsInDb: { uri: string, lastModified: Date }[] = []
 async function handleFile(file: FileSystem.File) {
+  //TODO: add more file formats
   if ([".m4a", ".mp3"].includes(file.extension) === false) {
     return
   }
@@ -37,7 +38,6 @@ async function handleFile(file: FileSystem.File) {
     const coverArt = await saveArtwork(file.uri);
     console.log(coverArt)
     console.log(`Fetching metadata for ${file.name} took ${performance.now() - start} milliseconds`)
-
     const data = {
       name: metadata.title || file.name.substring(0, file.name.lastIndexOf(".")),
       uri: file.uri,
@@ -115,6 +115,7 @@ export default function Layout() {
         <Stack.Screen name="settings" options={{ title: 'Settings', headerStyle: { backgroundColor: colors.background }, headerTitleStyle: { color: colors.light }, headerTitleAlign: "center" }} />
 
         <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="album/[name]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
       </Stack>
 
       {otherState.search ? <Search show={true} onClose={() => otherState.setSearch(false)} /> : <></>}
