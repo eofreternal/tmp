@@ -108,11 +108,16 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
 
     function ResultListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
         if (category == "songs") {
-            return <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+            return (
+                <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+            )
         } else if (category == "playlists") {
             return (
                 <Pressable
-                    onPress={() => router.navigate({ pathname: "/playlist/[id]", params: { id: item.id } })}
+                    onPress={() => {
+                        router.navigate({ pathname: "/playlist/[id]", params: { id: item.id } })
+                        onClose()
+                    }}
 
                     style={{
                         display: "flex",
@@ -142,7 +147,10 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
         } else if (category == "albums") {
             return (
                 <Pressable
-                    onPress={() => router.navigate({ pathname: "/album/[name]", params: { name: item.name } })}
+                    onPress={() => {
+                        router.navigate({ pathname: "/album/[name]", params: { name: item.name } })
+                        onClose()
+                    }}
 
                     style={{
                         display: "flex",
