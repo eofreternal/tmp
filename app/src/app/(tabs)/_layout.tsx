@@ -35,7 +35,7 @@ export default function RootLayout() {
                     headerTintColor: colors.light,
                     headerTitleAlign: "center",
 
-                    headerLeft: () => (<Pressable onPress={() => otherState.setSearch(true)} style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
+                    headerLeft: () => (<Pressable hitSlop={20} onPress={() => otherState.setSearch(true)} style={{ paddingLeft: 8 }}><Ionicons name="search" size={24} color="white" /></Pressable>),
                 }}>
                 <Tabs.Screen name="index" options={{
                     title: "Home",
