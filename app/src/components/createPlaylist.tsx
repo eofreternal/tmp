@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { View, Text } from 'react-native';
 import { BottomSheet, RNHostView, Host, TextInput, useNativeState, Column } from '@expo/ui';
 import { db } from "@/db/index"

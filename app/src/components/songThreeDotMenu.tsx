@@ -1,7 +1,7 @@
 import { BottomSheet, Button, Column, Text, Spacer } from "@expo/ui"
 import AddToPlaylist from "./addToPlaylist"
 import { useState } from "react"
-import useMusicStore, { Song } from "@/state/music"
+import useMusicStore from "@/state/music"
 
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 

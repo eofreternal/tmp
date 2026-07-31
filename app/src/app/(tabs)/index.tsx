@@ -1,7 +1,6 @@
 import { Platform, Text, ScrollView, View } from "react-native";
 import { Link } from 'expo-router';
 import { globalStyles } from "@/styles/global"
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function IndexScreen() {
   return (

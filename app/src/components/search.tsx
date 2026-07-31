@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef, useLayoutEffect } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { Pressable, View, Text, Image, TextInput, Keyboard } from "react-native"
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated"
 
@@ -6,7 +6,6 @@ import useMusicStore, { Song } from "@/state/music"
 import Fuse from "fuse.js"
 import { FlashList, FlashListRef } from "@shopify/flash-list"
 import { colors, globalStyles } from "@/styles/global"
-import Entypo from "@react-native-vector-icons/entypo"
 import SongThreeDotMenu from "@/components/songThreeDotMenu"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Preview from "@/components/preview"
@@ -38,7 +37,6 @@ function useDebounce(text: string, delay: number) {
 }
 
 export default function SearchComponent({ show, onClose }: { show: boolean, onClose: () => void }) {
-    const musicState = useMusicStore((state) => state)
     const songs = useMusicStore((state) => state.songs)
     const [playlists, setPlaylists] = useState<Awaited<ReturnType<typeof fetchPlaylists>>>([])
     const [albums, setAlbums] = useState<Awaited<ReturnType<typeof fetchAlbums>>>([])
