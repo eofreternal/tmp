@@ -79,6 +79,10 @@ export default function playlistIdPage() {
                     renderItem={({ item }) => (
                         <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
                     )}
+
+                    contentContainerStyle={{
+                        padding: 10
+                    }}
                 />
 
                 <Preview />
