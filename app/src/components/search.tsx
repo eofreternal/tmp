@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useRef, useLayoutEffect } from "react"
-import { Pressable, View, Text, Image, TextInput } from "react-native"
+import { Pressable, View, Text, Image, TextInput, Keyboard } from "react-native"
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated"
 
 import useMusicStore, { Song } from "@/state/music"
@@ -51,6 +51,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
     }, [])
 
     const [selectedSearchCategory, setSelectedSearchCategory] = useState<typeof searchCategories[number]>("songs")
+    const searchInput = useRef<TextInput>(null)
     const resultsRef = useRef<FlashListRef<Song>>(null)
     const data = useMemo(() => {
         if (selectedSearchCategory == "songs") {
@@ -94,9 +95,13 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
         if (show) {
             opacity.value = withTiming(1, { easing: Easing.out(Easing.quad) })
             translateY.value = withTiming(0)
+
+            searchInput.current?.focus()
         } else {
             opacity.value = withTiming(0)
             translateY.value = withTiming(50)
+
+            Keyboard.dismiss()
         }
     }, [show])
 
@@ -214,9 +219,9 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
                         <MaterialDesignIcons name="keyboard-backspace" size={24} color={colors.light} />
                     </Pressable>
                     <TextInput
+                        ref={searchInput}
                         value={searchQuery}
                         onChangeText={(text) => setSearchQuery(text)}
-                        autoFocus={true}
 
                         placeholder="Search your music"
                         placeholderTextColor={colors.light}
