@@ -11,12 +11,20 @@ import SongComponent from "@/components/song";
 export default function SongsScreen() {
     const musicState = useMusic((state) => state)
 
-    const [selectedSong, setSelectedSong] = useState<{
-        id: number
-        name: string
-        coverArtUri: string | null
-    } | null>(null)
-    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
+    const [threeDotMenu, setThreeDotMenu] = useState<({
+        show: false
+        song: null
+    }) | ({
+        show: true
+        song: {
+            id: number
+            name: string
+            coverArtUri: string | null
+        }
+    })>({
+        show: false,
+        song: null
+    })
 
     return (
         <View style={[globalStyles.view]}>
@@ -24,7 +32,7 @@ export default function SongsScreen() {
                 data={musicState.songs}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+                    <SongComponent item={item} set={(data) => setThreeDotMenu(data)} />
                 )}
 
                 ListEmptyComponent={<Text style={globalStyles.text}>No songs</Text>}
@@ -32,7 +40,7 @@ export default function SongsScreen() {
                     padding: 10
                 }}
             />
-            <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
+            <SongThreeDotMenu show={threeDotMenu.show} songId={threeDotMenu.show ? threeDotMenu.song.id : undefined} onClose={() => setThreeDotMenu({ show: false, song: null })} />
         </View>
     );
 }

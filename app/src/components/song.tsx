@@ -4,7 +4,19 @@ import { globalStyles } from "@/styles/global"
 
 import useMusicStore from "@/state/music"
 
-export default function SongComponent({ item, setSelectedSong, setShowThreeDotMenu }: { item: { id: number, name: string, coverArtUri: string | null }, setSelectedSong: (item: { id: number, name: string, coverArtUri: string | null }) => void, setShowThreeDotMenu: (o: boolean) => void }) {
+export default function SongComponent({ item, set }: {
+    item: { id: number, name: string, coverArtUri: string | null }, set: (data: ({
+        show: false
+        song: null
+    }) | ({
+        show: true
+        song: {
+            id: number
+            name: string
+            coverArtUri: string | null
+        }
+    })) => void
+}) {
     const musicState = useMusicStore((state) => state)
 
     return (
@@ -38,8 +50,10 @@ export default function SongComponent({ item, setSelectedSong, setShowThreeDotMe
                     <Text style={globalStyles.text}>{item.name}</Text>
                 </View>
                 <Pressable onPress={() => {
-                    setSelectedSong(item)
-                    setShowThreeDotMenu(true)
+                    set({
+                        show: true,
+                        song: item
+                    })
                 }} hitSlop={20}>
                     <Entypo name="dots-three-vertical" size={16} color="white" />
                 </Pressable>

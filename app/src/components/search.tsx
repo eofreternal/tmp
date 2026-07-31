@@ -64,8 +64,20 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
     }, [selectedSearchCategory])
     const [results, setResults] = useState<Result[]>([])
     const [searchQuery, setSearchQuery] = useState("")
-    const [selectedSong, setSelectedSong] = useState<Result | null>(null)
-    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
+    const [threeDotMenu, setThreeDotMenu] = useState<({
+        show: false
+        song: null
+    }) | ({
+        show: true
+        song: {
+            id: number
+            name: string
+            coverArtUri: string | null
+        }
+    })>({
+        show: false,
+        song: null
+    })
     const debouncedSearchQuery = useDebounce(searchQuery, 300)
     const search = useMemo(() => new Fuse(data, {
         keys: ["name"],
@@ -114,7 +126,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
     function ResultListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
         if (category == "songs") {
             return (
-                <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+                <SongComponent item={item} set={(data) => setThreeDotMenu(data)} />
             )
         } else if (category == "playlists") {
             return (
@@ -290,7 +302,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
                 </View>
 
                 <Preview />
-                <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
+                <SongThreeDotMenu show={threeDotMenu.show} songId={threeDotMenu.show ? threeDotMenu.song.id : undefined} onClose={() => setThreeDotMenu({ show: false, song: null })} />
             </Animated.View>
         </SafeAreaView >
     )

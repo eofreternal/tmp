@@ -15,12 +15,20 @@ import SongComponent from "@/components/song";
 
 export default function albumIdPage() {
     const { name }: { name: string } = useLocalSearchParams()
-    const [selectedSong, setSelectedSong] = useState<{
-        id: number
-        name: string
-        coverArtUri: string | null
-    } | null>(null)
-    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
+    const [threeDotMenu, setThreeDotMenu] = useState<({
+        show: false
+        song: null
+    }) | ({
+        show: true
+        song: {
+            id: number
+            name: string
+            coverArtUri: string | null
+        }
+    })>({
+        show: false,
+        song: null
+    })
 
     const [songs, setSongs] = useState<Song[]>([])
     useEffect(() => {
@@ -43,7 +51,7 @@ export default function albumIdPage() {
                 keyExtractor={((item) => item.id.toString())}
 
                 renderItem={(({ item }) => (
-                    <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+                    <SongComponent item={item} set={(data) => setThreeDotMenu(data)} />
                 ))}
 
                 contentContainerStyle={{
@@ -52,7 +60,7 @@ export default function albumIdPage() {
             />
 
             <Preview />
-            <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
+            <SongThreeDotMenu show={threeDotMenu.show} songId={threeDotMenu.show ? threeDotMenu.song.id : undefined} onClose={() => setThreeDotMenu({ show: false, song: null })} />
         </SafeAreaView>
     )
 }

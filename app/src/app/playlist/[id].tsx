@@ -32,12 +32,20 @@ export default function playlistIdPage() {
 
         songs: []
     })
-    const [selectedSong, setSelectedSong] = useState<{
-        id: number
-        name: string
-        coverArtUri: string | null
-    } | null>(null)
-    const [showThreeDotMenu, setShowThreeDotMenu] = useState(false)
+    const [threeDotMenu, setThreeDotMenu] = useState<({
+        show: false
+        song: null
+    }) | ({
+        show: true
+        song: {
+            id: number
+            name: string
+            coverArtUri: string | null
+        }
+    })>({
+        show: false,
+        song: null
+    })
 
     useEffect(() => {
         async function d() {
@@ -77,7 +85,7 @@ export default function playlistIdPage() {
                     data={playlistData.songs}
 
                     renderItem={({ item }) => (
-                        <SongComponent item={item} setSelectedSong={(item) => setSelectedSong(item)} setShowThreeDotMenu={(o) => setShowThreeDotMenu(o)} />
+                        <SongComponent item={item} set={(data) => setThreeDotMenu(data)} />
                     )}
 
                     contentContainerStyle={{
@@ -86,7 +94,7 @@ export default function playlistIdPage() {
                 />
 
                 <Preview />
-                <SongThreeDotMenu show={showThreeDotMenu} songId={selectedSong?.id} onClose={() => setShowThreeDotMenu(false)} />
+                <SongThreeDotMenu show={threeDotMenu.show} songId={threeDotMenu.show ? threeDotMenu.song.id : undefined} onClose={() => setThreeDotMenu({ show: false, song: null })} />
             </SafeAreaView>
 
             <BottomSheet isPresented={showOptions} onDismiss={() => setShowOptions(false)}>
