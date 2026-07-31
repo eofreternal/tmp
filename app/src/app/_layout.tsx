@@ -64,7 +64,8 @@ export default function Layout() {
   const musicState = useMusic((state) => state)
   const { success, error } = useMigrations(db, migrations);
 
-  const otherState = useOtherState((state) => state)
+  const showSearch = useOtherState((state) => state.search)
+  const setSearch = useOtherState((state) => state.setSearch)
 
   useEffect(() => {
     if (success === false) {
@@ -118,7 +119,7 @@ export default function Layout() {
         <Stack.Screen name="album/[name]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
       </Stack>
 
-      {otherState.search ? <Search show={true} onClose={() => otherState.setSearch(false)} /> : <></>}
+      <Search show={showSearch} onClose={() => setSearch(false)} />
       <Player isVisible={musicState.showPlayer} closeModal={() => { musicState.setShowPlayer(false) }} /></>
   );
 }
