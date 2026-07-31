@@ -37,10 +37,12 @@ export default function SongComponent({ item, setSelectedSong, setShowThreeDotMe
                     <Image source={{ uri: item.coverArtUri || "" }} style={{ width: 45, height: 45, borderRadius: 8 }} />
                     <Text style={globalStyles.text}>{item.name}</Text>
                 </View>
-                <Entypo onPress={() => {
+                <Pressable onPress={() => {
                     setSelectedSong(item)
                     setShowThreeDotMenu(true)
-                }} name="dots-three-vertical" size={16} color="white" />
+                }} hitSlop={20}>
+                    <Entypo name="dots-three-vertical" size={16} color="white" />
+                </Pressable>
             </View>
         </Pressable>
     )
