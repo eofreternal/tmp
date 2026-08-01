@@ -50,7 +50,7 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
 
     const [selectedSearchCategory, setSelectedSearchCategory] = useState<typeof searchCategories[number]>("songs")
     const searchInput = useRef<TextInput>(null)
-    const resultsRef = useRef<FlashListRef<Song>>(null)
+    const resultsRef = useRef<FlashListRef<Result>>(null)
     const data = useMemo(() => {
         if (selectedSearchCategory == "songs") {
             return songs
