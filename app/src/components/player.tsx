@@ -133,10 +133,7 @@ export default function Player({ isVisible, closeModal }: {
                     height: "100%",
                     backgroundColor: colors.background,
 
-                    zIndex: 100,
-
-                    borderColor: "green",
-                    borderWidth: 1
+                    zIndex: 100
                 }, animatedStyle]}
             >
                 <SafeAreaView style={[{
@@ -184,7 +181,7 @@ export default function Player({ isVisible, closeModal }: {
                         display: "flex",
                         flexDirection: "column",
 
-                        gap: 16
+                        gap: 24
                     }}>
                         <View style={[{
                             display: "flex",
@@ -215,8 +212,8 @@ export default function Player({ isVisible, closeModal }: {
                                     <Text style={[{
                                         textAlign: "left",
 
-                                        fontSize: 20,
-                                        fontWeight: "800"
+                                        fontSize: 24,
+                                        fontWeight: "600"
                                     }, globalStyles.text]}>{currentSong.name}</Text>
                                     <Pressable onPress={() => { setShowMenu(true) }}>
                                         <Entypo name="dots-three-vertical" size={18} color="white" />
@@ -236,83 +233,91 @@ export default function Player({ isVisible, closeModal }: {
                             display: "flex",
                             flexDirection: "column",
 
-                            width: "100%",
-                            gap: 16
+                            minWidth: "100%",
+                            gap: 36
                         }}>
                             <View style={{
                                 display: "flex",
-                                flexDirection: "row",
-                                gap: 8
+                                flexDirection: "column",
+
+                                minWidth: "100%",
+                                gap: 24
                             }}>
-                                <Pressable
-                                    onPress={() => { handlePlayPause() }}
-                                    style={{
-                                        backgroundColor: "#81cfff",
-                                        borderRadius: 50,
-                                        padding: 8,
-                                        alignSelf: 'flex-start'
-                                    }}>
-                                    {paused ? <Ionicons name="play" size={28} color={colors.background} /> : <Ionicons name="pause" size={28} color={colors.background} />}
-                                </Pressable>
-
-                                <Pressable
-                                    onPress={() => musicState.previousSong()}
-                                    style={{
-                                        backgroundColor: "#81cfff",
-                                        borderRadius: 50,
-                                        padding: 8,
-                                        alignSelf: 'flex-start'
-                                    }}>
-                                    <MaterialDesignIcons size={28} name="skip-previous" color={colors.background} />
-                                </Pressable>
-
-                                <Pressable
-                                    onPress={() => musicState.nextSong()}
-                                    style={{
-                                        backgroundColor: "#81cfff",
-                                        borderRadius: 50,
-                                        padding: 8,
-                                        alignSelf: 'flex-start'
-                                    }}>
-                                    <MaterialDesignIcons size={28} name="skip-next" color={colors.background} />
-                                </Pressable>
-                            </View>
-
-                            <View style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 8,
-
-                                alignItems: "center",
-
-                                maxWidth: 400
-                            }}>
-                                <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
-                                <View style={{ flex: 1 }}>
-                                    <Slider
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 12
+                                }}>
+                                    <Pressable
+                                        onPress={() => { handlePlayPause() }}
                                         style={{
-                                            marginLeft: Platform.select({ ios: 0, android: -15 }),
-                                            marginRight: Platform.select({ ios: 0, android: -15 })
-                                        }}
-                                        lowerLimit={0}
-                                        value={(seeking === false) ? status.currentTime : seekingTime}
-                                        maximumValue={status.duration}
-                                        minimumTrackTintColor="#81cfff"
-                                        thumbTintColor="#81cfff"
-                                        maximumTrackTintColor="#FFFFFF"
+                                            backgroundColor: colors.accent,
+                                            borderRadius: 50,
+                                            padding: 16,
+                                            alignSelf: 'flex-start'
+                                        }}>
+                                        {paused ? <Ionicons name="play" size={18} color={colors.background} /> : <Ionicons name="pause" size={18} color={colors.background} />}
+                                    </Pressable>
 
-                                        onValueChange={(e) => {
-                                            setSeeking(true)
-                                            setSeekingTime(e)
-                                        }}
+                                    <Pressable
+                                        onPress={() => musicState.previousSong()}
+                                        style={{
+                                            backgroundColor: colors.tertiary,
+                                            borderRadius: 50,
+                                            padding: 13,
+                                            alignSelf: 'flex-start'
+                                        }}>
+                                        <MaterialDesignIcons size={24} name="skip-previous" color={colors.mutedLight} />
+                                    </Pressable>
 
-                                        onSlidingComplete={async (e) => {
-                                            await player.seekTo(e)
-                                            setSeeking(false)
-                                        }}
-                                    />
+                                    <Pressable
+                                        onPress={() => musicState.nextSong()}
+                                        style={{
+                                            backgroundColor: colors.secondary,
+                                            borderRadius: 50,
+                                            padding: 13,
+                                            alignSelf: 'flex-start'
+                                        }}>
+                                        <MaterialDesignIcons size={24} name="skip-next" color={colors.mutedLight} />
+                                    </Pressable>
                                 </View>
-                                <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText(status.duration)}</Text>
+
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 8,
+
+                                    alignItems: "center",
+
+                                    maxWidth: 400
+                                }}>
+                                    <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText((seeking === false) ? status.currentTime : seekingTime)}</Text>
+                                    <View style={{ flex: 1 }}>
+                                        <Slider
+                                            style={{
+                                                marginLeft: Platform.select({ ios: 0, android: -15 }),
+                                                marginRight: Platform.select({ ios: 0, android: -15 })
+                                            }}
+                                            lowerLimit={0}
+                                            value={(seeking === false) ? status.currentTime : seekingTime}
+                                            maximumValue={status.duration}
+                                            minimumTrackTintColor={colors.accent}
+                                            thumbTintColor={colors.accent}
+                                            maximumTrackTintColor="#FFFFFF"
+
+                                            onValueChange={(e) => {
+                                                setSeeking(true)
+                                                setSeekingTime(e)
+                                            }}
+
+                                            onSlidingComplete={async (e) => {
+                                                await player.seekTo(e)
+                                                setSeeking(false)
+                                            }}
+                                        />
+                                    </View>
+                                    <Text style={[globalStyles.text, { width: 35 }]}>{secondsToFormattedText(status.duration)}</Text>
+                                </View>
                             </View>
 
                             <View style={{
@@ -320,20 +325,23 @@ export default function Player({ isVisible, closeModal }: {
                                 flexDirection: "row",
                                 gap: 16,
 
-                                alignItems: "flex-start"
+                                alignItems: "center"
                             }}>
                                 <Pressable onPress={() => setShowQueue(true)} style={{
-                                    borderColor: "red",
-                                    borderWidth: 1,
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 8,
+
+                                    alignItems: "center"
                                 }}>
+                                    <Entypo name="list" />
                                     <Text style={globalStyles.accentText}>Playing {currentQueueIndex + 1} of {queue.length}</Text>
                                 </Pressable>
 
                                 <Pressable onPress={() => {
                                     musicState.setLoop(!musicState.loop)
                                 }} style={{
-                                    borderColor: "red",
-                                    borderWidth: 1,
+                                    alignItems: "center"
                                 }}>
                                     <Entypo name="loop" size={28} color={musicState.loop ? colors.accent : colors.light} />
                                 </Pressable>
