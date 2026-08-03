@@ -1,0 +1,13 @@
+diff --git a/dist/liricle.d.ts b/dist/liricle.d.ts
+index 7005cc8af8716f2470a4b2cfdc63f0ae074ec4f9..1117954b6da38ba12795f0fd8c5cc2d6b7fb1e8e 100644
+--- a/dist/liricle.d.ts
++++ b/dist/liricle.d.ts
+@@ -26,7 +26,7 @@ interface WordData {
+     time: number;
+     text: string;
+ }
+-interface LineData {
++export interface LineData {
+     index?: number;
+     time: number;
+     text: string;

@@ -6,6 +6,7 @@ settings:
 
 patchedDependencies:
   '@missingcore/audio-metadata': 217dcd39c48d49054e1e0333578e28da9d7edeaf5de4e23a39df2eb892f3fd82
+  liricle: af6933f62cdff28ae9b3f677442106d2f42f9dbac9bfd09b5ca9ed0953ae61d3
 
 importers:
 
