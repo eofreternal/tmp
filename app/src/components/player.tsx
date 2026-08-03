@@ -144,17 +144,34 @@ export default function Player({ isVisible, closeModal }: {
                     alignItems: "center",
                     padding: 16
                 }, globalStyles.view]}>
-                    <Pressable style={{
+                    <View style={{
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingBottom: 16,
 
                         width: "100%",
-                        padding: 16,
+                        backgroundColor: colors.background
+                    }}>
+                        <Pressable style={{
+                            display: "flex",
+                            flexDirection: "column",
 
-                        alignItems: "flex-start"
-                    }} onPress={() => closeModal()}>
-                        <Ionicons name="chevron-down-outline" size={24} color="white" />
-                    </Pressable>
+                            alignItems: "flex-start"
+                        }} onPress={() => closeModal()}>
+                            <Ionicons name="chevron-down-outline" size={24} color="white" />
+                        </Pressable>
+
+                        <Text style={[{
+                            alignSelf: "center",
+                            fontSize: 18,
+                            fontWeight: 600
+                        }, globalStyles.text]}>Player</Text>
+
+                        <Pressable>
+                            <Ionicons name="chevron-down-outline" size={24} color={colors.background} />
+                        </Pressable>
+                    </View>
 
                     <View style={{
                         display: "flex",
