@@ -396,7 +396,6 @@ export default function Player({ isVisible, closeModal }: {
                         flexDirection: "column",
 
                         width: "100%",
-                        padding: 16,
 
                         alignItems: "flex-start"
                     }} onPress={() => setShowQueue(false)}>
