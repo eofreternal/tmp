@@ -11,7 +11,7 @@ import { colors, globalStyles } from "@/styles/global"
 import { useAudioPlayerStatus } from "expo-audio";
 import { secondsToFormattedText } from "@/util";
 
-import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { withTiming, Easing, useAnimatedStyle } from 'react-native-reanimated';
 import { useEffect, useState } from "react";
 
 import PlayerThreeDotMenu from "@/components/playerThreeDotMenu";
@@ -30,11 +30,6 @@ export default function Player({ isVisible, closeModal }: {
     const queue = useMusic((state) => state.queue)
     const currentQueueIndex = useMusic((state) => state.currentQueueIndex)
     const status = useAudioPlayerStatus(player)
-
-    const opacity = useSharedValue(0)
-    const translateY = useSharedValue(0)
-    const queueOpacity = useSharedValue(0)
-    const queueTranslateY = useSharedValue(0)
 
     const [seeking, setSeeking] = useState(false)
     const [seekingTime, setSeekingTime] = useState(0)

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useRef } from "react"
 import { Pressable, View, Text, Image, TextInput, Keyboard } from "react-native"
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated"
 
-import useMusicStore, { Song } from "@/state/music"
+import useMusicStore from "@/state/music"
 import Fuse from "fuse.js"
 import { FlashList, FlashListRef } from "@shopify/flash-list"
 import { colors, globalStyles } from "@/styles/global"
