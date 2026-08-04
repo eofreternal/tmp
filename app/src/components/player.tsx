@@ -15,12 +15,14 @@ import Animated, { withTiming, Easing, useSharedValue, useAnimatedStyle } from '
 import { useEffect, useState } from "react";
 
 import PlayerThreeDotMenu from "@/components/playerThreeDotMenu";
+import LyricsComponent from "@/components/lyrics"
 
 export default function Player({ isVisible, closeModal }: {
     isVisible: boolean, closeModal: () => void
 }) {
     const [showQueue, setShowQueue] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
+    const [showLyrics, setShowLyrics] = useState(false)
 
     const musicState = useMusic((state) => state)
     const player = useMusic((state) => state.player)
@@ -340,7 +342,7 @@ export default function Player({ isVisible, closeModal }: {
                             <View style={{
                                 display: "flex",
                                 flexDirection: "row",
-                                gap: 16,
+                                justifyContent: "space-between",
 
                                 alignItems: "center"
                             }}>
@@ -355,13 +357,28 @@ export default function Player({ isVisible, closeModal }: {
                                     <Text style={globalStyles.accentText}>Playing {currentQueueIndex + 1} of {queue.length}</Text>
                                 </Pressable>
 
-                                <Pressable onPress={() => {
-                                    musicState.setLoop(!musicState.loop)
-                                }} style={{
-                                    alignItems: "center"
+                                <View style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+
+                                    gap: 16
                                 }}>
-                                    <Entypo name="loop" size={28} color={musicState.loop ? colors.accent : colors.light} />
-                                </Pressable>
+                                    <Pressable onPress={() => {
+                                        setShowLyrics(true)
+                                    }} style={{
+                                        alignItems: "center"
+                                    }}>
+                                        <Entypo name="text" size={28} color={musicState.loop ? colors.accent : colors.light} />
+                                    </Pressable>
+
+                                    <Pressable onPress={() => {
+                                        musicState.setLoop(!musicState.loop)
+                                    }} style={{
+                                        alignItems: "center"
+                                    }}>
+                                        <Entypo name="loop" size={28} color={musicState.loop ? colors.accent : colors.light} />
+                                    </Pressable>
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -369,6 +386,7 @@ export default function Player({ isVisible, closeModal }: {
             </Animated.View>
 
             <PlayerThreeDotMenu show={showMenu} songId={currentSong.id} onClose={() => setShowMenu(false)} />
+            <LyricsComponent show={showLyrics} uri={currentSong.uri} onClose={() => setShowLyrics(false)} />
             <Animated.View
                 pointerEvents={showQueue ? "auto" : "none"}
 
