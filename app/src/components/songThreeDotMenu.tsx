@@ -23,6 +23,7 @@ export default function SongThreeDotMenu({ show, songId, onClose }: { show: bool
                             return
                         }
                         await musicState.addSongToQueue(songId)
+                        onClose()
                     }} modifiers={[Modifer.fillMaxWidth()]} variant="text">
                         <MaterialDesignIcons name="playlist-music" size={24} color={colors.light} />
                         <Spacer size={16} />
@@ -35,6 +36,7 @@ export default function SongThreeDotMenu({ show, songId, onClose }: { show: bool
                             return
                         }
                         setShowPlaylists(true)
+                        onClose()
                     }} modifiers={[Modifer.fillMaxWidth()]} variant="text" >
                         <MaterialDesignIcons name="playlist-plus" size={24} color={colors.light} />
                         <Spacer size={16} />
