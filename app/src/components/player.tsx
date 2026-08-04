@@ -58,17 +58,13 @@ export default function Player({ isVisible, closeModal }: {
     }
 
     useEffect(() => {
-        if (isVisible == false) {
-            return
-        }
-
         const listener = BackHandler.addEventListener("hardwareBackPress", () => {
             closeModal();
             return true;
         })
 
         return () => listener.remove()
-    }, [isVisible, closeModal])
+    }, [closeModal])
 
     useEffect(() => {
         // If I don't do this wacky thing and use player.paused directly in the JSX, there will be this weird flickering when the user is seeking
