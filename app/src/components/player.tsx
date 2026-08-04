@@ -78,34 +78,14 @@ export default function Player({ isVisible, closeModal }: {
         }
     }, [player.paused])
 
-    useEffect(() => {
-        if (isVisible) {
-            opacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.quad) })
-            translateY.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
-        } else {
-            opacity.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
-            translateY.value = withTiming(50, { duration: 300, easing: Easing.out(Easing.quad) })
-        }
-    }, [isVisible])
-
-    useEffect(() => {
-        if (showQueue) {
-            queueOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.quad) })
-            queueTranslateY.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
-        } else {
-            queueOpacity.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.quad) })
-            queueTranslateY.value = withTiming(50, { duration: 300, easing: Easing.out(Easing.quad) })
-        }
-    }, [showQueue])
-
     const animatedStyle = useAnimatedStyle(() => ({
-        opacity: opacity.value,
-        transform: [{ translateY: translateY.value }]
-    }))
+        opacity: withTiming(isVisible ? 1 : 0, { duration: 300, easing: Easing.out(Easing.quad) }),
+        transform: [{ translateY: withTiming(isVisible ? 0 : 50, { duration: 300, easing: Easing.out(Easing.quad) }) }]
+    }), [isVisible])
     const queueAnimatedStyle = useAnimatedStyle(() => ({
-        opacity: queueOpacity.value,
-        transform: [{ translateY: queueTranslateY.value }]
-    }))
+        opacity: withTiming(showQueue ? 1 : 0, { duration: 300, easing: Easing.out(Easing.quad) }),
+        transform: [{ translateY: withTiming(showQueue ? 0 : 50, { duration: 300, easing: Easing.out(Easing.quad) }) }]
+    }), [showQueue])
 
 
 

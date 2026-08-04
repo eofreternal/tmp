@@ -120,7 +120,6 @@ export default function SearchComponent({ show, onClose }: { show: boolean, onCl
         transform: [{ translateY: translateY.value }]
     }))
 
-
     function ResultListItem({ category, item }: { category: typeof searchCategories[number], item: Result }) {
         if (category == "songs") {
             return (
