@@ -99,6 +99,9 @@ importers:
       fuse.js:
         specifier: ^7.5.0
         version: 7.5.0
+      liricle:
+        specifier: ^4.2.0
+        version: 4.2.0(patch_hash=af6933f62cdff28ae9b3f677442106d2f42f9dbac9bfd09b5ca9ed0953ae61d3)
       nanoid:
         specifier: ^5.1.16
         version: 5.1.16
@@ -2569,6 +2572,9 @@ packages:
   lightningcss@1.32.0:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
+
+  liricle@4.2.0:
+    resolution: {integrity: sha512-NbXs+giTEXmcynnkrm4fhlDxAwLlXuFCyp4k4SjWIZl1CPafAPWWUmtZ8QZfUeI0hIwWBpAP5aP0YTvqhKVOXQ==}
 
   locate-path@8.0.0:
     resolution: {integrity: sha512-XT9ewWAC43tiAV7xDAPflMkG0qOPn2QjHqlgX8FOqmWa/rxnyYDulF9T0F7tRy1u+TVTmK/M//6VIOye+2zDXg==}
@@ -6256,6 +6262,8 @@ snapshots:
       lightningcss-linux-x64-musl: 1.32.0
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
+
+  liricle@4.2.0(patch_hash=af6933f62cdff28ae9b3f677442106d2f42f9dbac9bfd09b5ca9ed0953ae61d3): {}
 
   locate-path@8.0.0:
     dependencies:

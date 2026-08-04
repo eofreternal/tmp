@@ -32,6 +32,7 @@
     "expo-system-ui": "~57.0.2",
     "expo-web-browser": "~57.0.2",
     "fuse.js": "^7.5.0",
+    "liricle": "^4.2.0",
     "nanoid": "^5.1.16",
     "react": "19.2.3",
     "react-dom": "19.2.3",
