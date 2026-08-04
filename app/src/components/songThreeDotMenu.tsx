@@ -6,7 +6,7 @@ import useMusicStore from "@/state/music"
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 
 import * as Modifer from "@expo/ui/jetpack-compose/modifiers"
-import { colors } from "@/styles/global"
+import { colors, globalStyles } from "@/styles/global"
 
 export default function SongThreeDotMenu({ show, songId, onClose }: { show: boolean, songId: number | undefined, onClose: () => void }) {
     const musicState = useMusicStore((state) => state)
@@ -26,7 +26,7 @@ export default function SongThreeDotMenu({ show, songId, onClose }: { show: bool
                     }} modifiers={[Modifer.fillMaxWidth()]} variant="text">
                         <MaterialDesignIcons name="playlist-music" size={24} color={colors.light} />
                         <Spacer size={16} />
-                        <Text textStyle={{ textAlign: "left" }} modifiers={[Modifer.fillMaxWidth()]}>Add to queue</Text>
+                        <Text textStyle={{ textAlign: "left", color: colors.light }} modifiers={[Modifer.fillMaxWidth()]}>Add to queue</Text>
                     </Button>
 
                     <Button onPress={() => {
@@ -38,7 +38,7 @@ export default function SongThreeDotMenu({ show, songId, onClose }: { show: bool
                     }} modifiers={[Modifer.fillMaxWidth()]} variant="text" >
                         <MaterialDesignIcons name="playlist-plus" size={24} color={colors.light} />
                         <Spacer size={16} />
-                        <Text textStyle={{ textAlign: "left" }} modifiers={[Modifer.fillMaxWidth()]}>Add to playlist</Text>
+                        <Text textStyle={{ textAlign: "left", color: colors.light }} modifiers={[Modifer.fillMaxWidth()]}>Add to playlist</Text>
                     </Button>
                 </Column>
             </BottomSheet>
