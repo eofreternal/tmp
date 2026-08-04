@@ -1,4 +1,5 @@
-import { FlatList, Pressable, View, Text } from "react-native"
+import { Pressable, View, Text } from "react-native"
+import { FlashList } from "@shopify/flash-list"
 import { BottomSheet, RNHostView } from "@expo/ui"
 
 import CreatePlaylist from "@/components/createPlaylist"
@@ -65,7 +66,7 @@ export default function AddToPlaylist({ show, songId, onClose }: { show: boolean
 
                         gap: 12
                     }}>
-                        <FlatList
+                        <FlashList
                             initialNumToRender={16}
 
                             data={playlists}

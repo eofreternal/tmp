@@ -2,7 +2,8 @@ import { db } from "@/db";
 import * as schema from "@/db/schema"
 import { globalStyles } from "@/styles/global";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
-import { Image, Text, FlatList, View } from "react-native"
+import { Image, Text, View } from "react-native"
+import { FlashList } from "@shopify/flash-list"
 import { Link } from "expo-router";
 
 export default function AlbumsPage() {
@@ -10,7 +11,7 @@ export default function AlbumsPage() {
 
     return (
         <View style={[globalStyles.view]}>
-            <FlatList
+            <FlashList
                 data={albums}
                 keyExtractor={(album) => album}
 

@@ -1,7 +1,6 @@
 import { globalStyles } from "@/styles/global"
 import { Image, Text, View } from "react-native"
-
-import { FlatList } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
 
 import CreatePlaylist from "@/components/createPlaylist"
@@ -22,8 +21,7 @@ export default function PlaylistsPage() {
 
     return (
         <View style={[globalStyles.view]}>
-            <FlatList
-                initialNumToRender={16}
+            <FlashList
                 data={playlists}
                 keyExtractor={(data) => data.id.toString()}
 

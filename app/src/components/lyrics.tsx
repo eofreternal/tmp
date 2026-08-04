@@ -1,4 +1,5 @@
-import { View, Pressable, Text, BackHandler, FlatList } from "react-native"
+import { View, Pressable, Text, BackHandler } from "react-native"
+import { FlashList } from "@shopify/flash-list"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated, { useAnimatedStyle, withTiming, Easing } from "react-native-reanimated"
 
@@ -165,7 +166,7 @@ export default function LyricsComponent({ show, uri, onClose }: { show: boolean,
                         </Pressable>
                     </View>
 
-                    <FlatList
+                    <FlashList
                         data={lyrics}
                         keyExtractor={(item) => item.time.toString()}
 
