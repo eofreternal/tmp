@@ -11,13 +11,30 @@ const setupPlayer = (get: () => any) => {
         updateInterval: 100
     })
 
-    player.addListener("playbackStatusUpdate", (status) => {
+    let timeOfLastUpdate = Date.now()
+    player.addListener("playbackStatusUpdate", async (status) => {
+        const { loop, nextSong, queue, currentQueueIndex } = get()
         if (status.didJustFinish) {
-            const { loop, nextSong } = get()
             if (loop) {
                 player.seekTo(0)
             } else {
                 nextSong()
+            }
+        }
+
+        if ((Date.now() - timeOfLastUpdate) >= 10_000) {
+            if (player.paused == false) {
+                const song = queue[currentQueueIndex]
+                if (song == undefined) {
+                    return
+                }
+
+                await db.insert(schema.timeSpentListeningTable).values({
+                    songId: song.id,
+                    dateAdded: new Date()
+                })
+
+                timeOfLastUpdate = Date.now()
             }
         }
     })

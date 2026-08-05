@@ -28,6 +28,14 @@ export const playlistSongsJunctionTable = sqliteTable("playlistSongsJunction", {
     dateAdded: integer({ mode: "timestamp_ms" }).notNull()
 })
 
+export const timeSpentListeningTable = sqliteTable("time_spent_listening", {
+    id: integer().primaryKey({ autoIncrement: true }),
+
+    songId: integer().notNull().references(() => songsTable.id),
+
+    dateAdded: integer({ mode: "timestamp_ms" }).notNull()
+})
+
 export const relations = defineRelations({ songsTable, playlistTable, playlistSongsJunctionTable }, (r) => ({
     songsTable: {
         playlists: r.many.playlistTable({
