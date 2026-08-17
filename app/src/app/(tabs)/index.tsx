@@ -64,6 +64,9 @@ export default function IndexScreen() {
         <Text style={globalStyles.text}>Settings?</Text>
         <Link style={globalStyles.text} href="/settings"><Text style={globalStyles.text}>Go to settingssssss</Text></Link>
 
+
+        <Link style={globalStyles.text} href="/settings"><Text style={globalStyles.text}>Go to listen together!</Text></Link>
+
         <View style={{
           display: "flex",
           flexDirection: "column",

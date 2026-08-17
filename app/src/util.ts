@@ -15,6 +15,8 @@ import * as schema from "@/db/schema"
 import { eq } from "drizzle-orm"
 
 const MUSIC_FOLDER = 'music_folder';
+const DEVICE_ID = "id"
+export const NAME = "name"
 
 export async function getOrRequestMusicFolder() {
     const savedUri = await AsyncStorage.getItem(MUSIC_FOLDER);
@@ -27,6 +29,27 @@ export async function getOrRequestMusicFolder() {
     await AsyncStorage.setItem(MUSIC_FOLDER, directory.uri);
     return directory.uri
 };
+
+export async function getOrSetDeviceId() {
+    const id = await AsyncStorage.getItem(DEVICE_ID)
+    if (id) {
+        return id
+    }
+
+    const d = nanoid()
+    await AsyncStorage.setItem(DEVICE_ID, d)
+    return d
+}
+
+export async function getName() {
+    const name = await AsyncStorage.getItem(NAME)
+    return name
+}
+
+export async function setName(setName: string) {
+    await AsyncStorage.setItem(NAME, setName)
+    return NAME
+}
 
 export async function getMetadata(uri: string) {
     // MARK: uncomment for prod

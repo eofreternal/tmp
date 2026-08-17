@@ -6,6 +6,13 @@ import { db } from "@/db";
 
 export type Song = InferSelectModel<typeof schema.songsTable>
 
+async function songExists(hash: string) {
+    const request = await fetch(`10.0.0.38:3008/song-exists/${hash}`)
+    const data = await request.json()
+
+    return data.success
+}
+
 const setupPlayer = (get: () => any) => {
     const player = createAudioPlayer(null, {
         updateInterval: 100

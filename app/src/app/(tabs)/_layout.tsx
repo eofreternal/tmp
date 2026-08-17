@@ -53,6 +53,11 @@ export default function RootLayout() {
                     title: "Albums",
                     tabBarIcon: ({ color, size }) => (<MaterialDesignIcons name="album" size={size} color={color} />)
                 }} />
+
+                <Tabs.Screen name="listen" options={{
+                    title: "Listen",
+                    tabBarIcon: ({ color, size }) => (<MaterialDesignIcons name="music-note-eighth" size={size} color={color} />)
+                }} />
             </Tabs >
         </>
     );

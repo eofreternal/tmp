@@ -117,6 +117,7 @@ export default function Layout() {
 
         <Stack.Screen name="playlist/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
         <Stack.Screen name="album/[name]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
+        <Stack.Screen name="listen/[id]" options={{ title: 'Loading...', headerStyle: { backgroundColor: colors.background }, headerTitleAlign: "center" }} />
       </Stack>
 
       <Search show={showSearch} onClose={() => setSearch(false)} />
