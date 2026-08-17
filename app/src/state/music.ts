@@ -57,8 +57,10 @@ const useMusicStore = create<{
     addSongToQueue: (songId: number) => Promise<void>,
     setCurrentQueueIndex: (index: number) => void,
 
-    startPlayer: () => void,
-    stopPlayer: () => void,
+    playSong: (index: number) => void,
+    resumePlayer: () => void,
+    pausePlayer: () => void,
+    togglePlayPause: () => void,
 
     nextSong: () => void,
     previousSong: () => void,
@@ -91,46 +93,59 @@ const useMusicStore = create<{
     },
     setCurrentQueueIndex: (index) => set((currentState) => ({ currentQueueIndex: index })),
 
-    startPlayer: () => {
-        const { player, queue, currentQueueIndex } = get()
+    playSong: (index) => {
+        const { player, queue } = get()
 
-        const song = queue[currentQueueIndex]
+        const song = queue[index]
         if (song === undefined) {
             return
         }
 
         player.replace({ uri: song.uri })
         player.play()
+        set(() => ({ currentQueueIndex: index }))
     },
-    stopPlayer: () => {
+
+    resumePlayer: () => {
+        const { player, queue, currentQueueIndex, playSong } = get()
+
+        // There's a slight bit of inaccuracy between the currentTime and the duration of the song
+        // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
+        const difference = Math.abs(player.duration - player.currentTime)
+        if (difference < 0.2) {
+            if (queue.length == currentQueueIndex) {
+                playSong(0)
+                return
+            }
+        }
+
+        player.play()
+    },
+    pausePlayer: () => {
         const { player } = get()
 
         player.pause()
     },
+    togglePlayPause: () => {
+        const { player, resumePlayer, pausePlayer } = get()
+
+        if (player.paused) {
+            resumePlayer()
+            return
+        }
+
+        pausePlayer()
+    },
 
     nextSong: () => {
-        const { player, queue, currentQueueIndex } = get()
+        const { playSong, currentQueueIndex } = get()
 
-        const song = queue[currentQueueIndex + 1]
-        if (song === undefined) {
-            return
-        }
-
-        player.replace({ uri: song.uri })
-        player.play()
-        set((currentState) => ({ currentQueueIndex: currentState.currentQueueIndex + 1 }))
+        playSong(currentQueueIndex + 1)
     },
     previousSong: () => {
-        const { player, queue, currentQueueIndex } = get()
+        const { playSong, currentQueueIndex } = get()
 
-        const song = queue[currentQueueIndex - 1]
-        if (song === undefined) {
-            return
-        }
-
-        player.replace({ uri: song.uri })
-        player.play()
-        set((currentState) => ({ currentQueueIndex: currentState.currentQueueIndex - 1 }))
+        playSong(currentQueueIndex - 1)
     },
     setLoop: (loop: boolean) => set((_currentState) => ({ loop: loop }))
 }));

@@ -25,6 +25,7 @@ export default function Player({ isVisible, closeModal }: {
     const [showLyrics, setShowLyrics] = useState(false)
 
     const musicState = useMusic((state) => state)
+    const togglePlayPause = useMusic((state) => state.togglePlayPause)
     const player = useMusic((state) => state.player)
     const currentSong = useMusic((state) => state.queue[state.currentQueueIndex])
     const queue = useMusic((state) => state.queue)
@@ -34,23 +35,6 @@ export default function Player({ isVisible, closeModal }: {
     const [seeking, setSeeking] = useState(false)
     const [seekingTime, setSeekingTime] = useState(0)
     const [paused, setPaused] = useState(false)
-
-    function handlePlayPause() {
-        if (player.paused) {
-            // There's a slight bit of inaccuracy between the currentTime and the duration of the song
-            // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
-            const difference = Math.abs(player.duration - player.currentTime)
-            console.log(difference)
-            if (difference < 0.2) {
-                player.seekTo(0)
-            }
-
-            player.play()
-            return
-        }
-
-        player.pause()
-    }
 
     useEffect(() => {
         const listener = BackHandler.addEventListener("hardwareBackPress", () => {
@@ -239,7 +223,7 @@ export default function Player({ isVisible, closeModal }: {
                                     gap: 12
                                 }}>
                                     <Pressable
-                                        onPress={() => { handlePlayPause() }}
+                                        onPress={() => { togglePlayPause() }}
                                         style={{
                                             backgroundColor: colors.accent,
                                             borderRadius: 50,

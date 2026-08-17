@@ -34,29 +34,13 @@ function ListItem({ item, isCurrent, seekTo }: { item: LineData, isCurrent: bool
 }
 
 export default function LyricsComponent({ show, uri, onClose }: { show: boolean, uri: string, onClose: () => void }) {
+    const togglePlayPause = useMusicStore((state) => state.togglePlayPause)
     const player = useMusicStore((state) => state.player)
     const musicState = useMusicStore((state) => state)
     const status = useAudioPlayerStatus(player)
     const [currentLyricIndex, setCurrentLyricIndex] = useState(0)
     const [lyrics, setLyrics] = useState<LineData[]>([])
     const [paused, setPaused] = useState(false)
-
-    function handlePlayPause() {
-        if (player.paused) {
-            // There's a slight bit of inaccuracy between the currentTime and the duration of the song
-            // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
-            const difference = Math.abs(player.duration - player.currentTime)
-            console.log(difference)
-            if (difference < 0.2) {
-                player.seekTo(0)
-            }
-
-            player.play()
-            return
-        }
-
-        player.pause()
-    }
 
     useEffect(() => {
         setPaused(player.paused)
@@ -194,7 +178,7 @@ export default function LyricsComponent({ show, uri, onClose }: { show: boolean,
                         width: '100%'
                     }}>
                         <Pressable
-                            onPress={() => { handlePlayPause() }}
+                            onPress={() => { togglePlayPause() }}
                             style={{
                                 backgroundColor: colors.accent,
                                 borderRadius: 50,

@@ -10,23 +10,7 @@ export default function Preview() {
     const player = useMusic((state) => state.player)
     const status = useAudioPlayerStatus(player)
     const currentSong = useMusic((state) => state.queue[state.currentQueueIndex])
-
-    function handlePlayPause() {
-        if (player.paused) {
-            // There's a slight bit of inaccuracy between the currentTime and the duration of the song
-            // If they're about a 200ms apart, just consider it the ending of the song and loop it when the user presses the "start" button
-            const difference = Math.abs(player.duration - player.currentTime)
-            console.log(difference)
-            if (difference < 0.2) {
-                player.seekTo(0)
-            }
-
-            player.play()
-            return
-        }
-
-        player.pause()
-    }
+    const togglePlayPause = useMusic((state) => state.togglePlayPause)
 
     return (
         (currentSong !== undefined) ?
@@ -63,7 +47,7 @@ export default function Preview() {
 
                             alignItems: "center"
                         }}
-                            onPress={() => handlePlayPause()}>
+                            onPress={() => togglePlayPause()}>
                             {player.paused ? <Ionicons name="play" size={28} color={colors.light} /> : <Ionicons name="pause" size={28} color={colors.light} />}
                             <Text style={[{
                                 fontSize: 10
