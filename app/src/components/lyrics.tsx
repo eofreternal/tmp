@@ -153,6 +153,9 @@ export default function LyricsComponent({ show, uri, onClose }: { show: boolean,
                     <FlashList
                         data={lyrics}
                         keyExtractor={(item) => item.time.toString()}
+                        style={{
+                            width: "100%",
+                        }}
 
                         renderItem={((item) => (
                             <ListItem item={item.item} isCurrent={item.index == currentLyricIndex} seekTo={(time) => player.seekTo(time)} />
