@@ -85,8 +85,7 @@ export default function IndexScreen() {
                 onPress={async () => {
                   musicState.clearQueue()
                   await musicState.addSongToQueue(item.id)
-                  musicState.setCurrentQueueIndex(0)
-                  musicState.startPlayer()
+                  musicState.playSong(0)
                 }}
                 style={{
                   display: "flex",

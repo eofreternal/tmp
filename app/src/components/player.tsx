@@ -382,8 +382,7 @@ export default function Player({ isVisible, closeModal }: {
                         renderItem={({ item, index }) => (
                             <Pressable
                                 onPress={() => {
-                                    musicState.setCurrentQueueIndex(index)
-                                    musicState.startPlayer()
+                                    musicState.playSong(index)
                                 }}
                                 style={{ display: "flex", flexDirection: "row", marginBottom: 16 }}>
                                 <View style={{ display: "flex", flexDirection: "row", gap: "16", alignItems: "center" }}>
