@@ -156,6 +156,7 @@ export default function LyricsComponent({ show, uri, onClose }: { show: boolean,
                         style={{
                             width: "100%",
                         }}
+                        showsVerticalScrollIndicator={false}
 
                         renderItem={((item) => (
                             <ListItem item={item.item} isCurrent={item.index == currentLyricIndex} seekTo={(time) => player.seekTo(time)} />
