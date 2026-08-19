@@ -4,14 +4,26 @@ import * as schema from "@/db/schema"
 import { InferSelectModel } from "drizzle-orm";
 import { db } from "@/db";
 
+export type HostAction =
+    {
+        action: "play",
+        time: number,
+        unixEpochMs: number
+    } | {
+        action: "pause",
+        time: number,
+        unixEpochMs: number
+    } | {
+        action: "seek",
+        time: number,
+        unixEpochMs: number
+    } | {
+        action: "set_song",
+        uri: string,
+        unixEpochMs: number
+    }
+
 export type Song = InferSelectModel<typeof schema.songsTable>
-
-async function songExists(hash: string) {
-    const request = await fetch(`10.0.0.38:3008/song-exists/${hash}`)
-    const data = await request.json()
-
-    return data.success
-}
 
 const setupPlayer = (get: () => any) => {
     const player = createAudioPlayer(null, {
@@ -49,6 +61,14 @@ const setupPlayer = (get: () => any) => {
     return player
 }
 
+const listeners = new Set<(data: HostAction) => void>()
+
+function notifyListeners(action: HostAction) {
+    listeners.forEach(cb => {
+        cb(action)
+    })
+}
+
 const useMusicStore = create<{
     showPlayer: boolean,
     loop: boolean,
@@ -71,7 +91,10 @@ const useMusicStore = create<{
 
     nextSong: () => void,
     previousSong: () => void,
-    setLoop: (loop: boolean) => void
+    setLoop: (loop: boolean) => void,
+
+    //Stuff for the socket
+    subscribeToHostAction: (cb: (data: HostAction) => void) => (() => void)
 }>((set, get) => ({
     showPlayer: false,
     loop: false,
@@ -100,8 +123,8 @@ const useMusicStore = create<{
     },
     setCurrentQueueIndex: (index) => set((currentState) => ({ currentQueueIndex: index })),
 
-    playSong: (index) => {
-        const { player, queue } = get()
+    playSong: async (index) => {
+        const { player, queue, } = get()
 
         const song = queue[index]
         if (song === undefined) {
@@ -111,6 +134,11 @@ const useMusicStore = create<{
         player.replace({ uri: song.uri })
         player.play()
         set(() => ({ currentQueueIndex: index }))
+        notifyListeners({
+            action: "set_song",
+            uri: song.uri,
+            unixEpochMs: Date.now()
+        })
     },
 
     resumePlayer: () => {
@@ -127,11 +155,21 @@ const useMusicStore = create<{
         }
 
         player.play()
+        notifyListeners({
+            action: "play",
+            time: player.currentTime,
+            unixEpochMs: Date.now()
+        })
     },
     pausePlayer: () => {
         const { player } = get()
 
         player.pause()
+        notifyListeners({
+            action: "pause",
+            time: player.currentTime,
+            unixEpochMs: Date.now()
+        })
     },
     togglePlayPause: () => {
         const { player, resumePlayer, pausePlayer } = get()
@@ -154,7 +192,14 @@ const useMusicStore = create<{
 
         playSong(currentQueueIndex - 1)
     },
-    setLoop: (loop: boolean) => set((_currentState) => ({ loop: loop }))
+    setLoop: (loop: boolean) => set((_currentState) => ({ loop: loop })),
+
+    //Stuff for the socket
+    subscribeToHostAction: (cb) => {
+        listeners.add(cb)
+
+        return () => listeners.delete(cb)
+    }
 }));
 
 export default useMusicStore;

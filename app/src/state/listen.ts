@@ -1,6 +1,12 @@
 import { io, Socket } from "socket.io-client"
 import { create } from "zustand";
 import { router } from "expo-router";
+import * as schema from "@/db/schema"
+import { db } from "@/db/index"
+import { eq } from "drizzle-orm"
+
+import * as Crypto from "expo-crypto"
+import * as FileSystem from "expo-file-system"
 
 import { getOrSetDeviceId } from "@/util"
 
@@ -8,6 +14,25 @@ import { ServerToClientEvents, ClientToServerEvents, hostActionZodType } from ".
 
 import useMusicStore from "./music";
 import { z } from "zod"
+import { HostAction } from "@/state/music"
+
+async function getFileHash(uri: string) {
+    const file = new FileSystem.File(uri)
+    if (file.exists == false) {
+        return { success: false, hash: "" };
+    }
+
+    const base64 = file.base64Sync()
+    const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, base64)
+    return { success: false, hash };
+}
+
+async function songExists(hash: string) {
+    const request = await fetch(`10.0.0.38:3008/song-exists/${hash}`)
+    const data = await request.json()
+
+    return data.success as boolean
+}
 
 const useListenStore = create<{
     socket: Socket<ServerToClientEvents, ClientToServerEvents> | null,
@@ -27,7 +52,8 @@ const useListenStore = create<{
         lastHostAction: z.infer<typeof hostActionZodType> | null
     },
 
-    init: (name: string) => Promise<void>
+    init: (name: string) => Promise<void>,
+    uploadSong: (roomId: number, uri: string) => Promise<void>
 }>((set, get) => ({
     socket: null,
     playingSongHash: null,
@@ -47,7 +73,7 @@ const useListenStore = create<{
     },
 
     init: async (name) => {
-        const { playingSongHash, socket: socketExists } = get()
+        const { playingSongHash, socket: socketExists, uploadSong, currentRoom } = get()
         if (socketExists !== null) {
             return
         }
@@ -122,7 +148,81 @@ const useListenStore = create<{
 
         socket.emit("fetch_rooms")
         set(() => ({ socket: socket }))
+
+        const subscribeToHostAction = useMusicStore.getState().subscribeToHostAction
+
+        //TODO: write code for this stuff and make it broadcast host action to the backend
+        subscribeToHostAction((data: HostAction) => {
+            if (data.action !== "play") {
+                return
+            }
+        })
+        subscribeToHostAction((data: HostAction) => {
+            if (data.action !== "pause") {
+                return
+            }
+        })
+        subscribeToHostAction((data: HostAction) => {
+            if (data.action !== "seek") {
+                return
+            }
+        })
+        subscribeToHostAction((data: HostAction) => {
+            if (data.action !== "set_song") {
+                return
+            }
+
+            if (currentRoom.roomId == null) {
+                return
+            }
+
+            uploadSong(currentRoom.roomId, data.uri)
+        })
+    },
+
+    async uploadSong(roomId, uri) {
+        const hash = await getFileHash(uri)
+        if (hash.success == false) {
+            return;
+        }
+
+        const exists = await songExists(hash.hash)
+        if (exists == true) {
+            return
+        }
+
+        const formData = new FormData()
+        const file = new FileSystem.File(uri)
+        formData.append("file", file)
+
+        const [metadata] = await db.select().from(schema.songsTable).where(eq(schema.songsTable.uri, uri))
+
+        if (metadata) {
+            if (metadata.coverArtUri) {
+                const coverArtFile = new FileSystem.File(metadata.coverArtUri);
+                formData.append('coverArt', coverArtFile);
+            }
+
+            if (metadata.name) {
+                formData.append('metadata', JSON.stringify({
+                    name: metadata.name,
+                    artist: metadata.artist
+                }));
+            }
+        }
+
+        const deviceId = await getOrSetDeviceId()
+        formData.append("roomId", roomId.toString());
+        formData.append("creator", deviceId)
+        const response = await fetch("http://10.0.0.38:3008/upload-song", {
+            method: "POST",
+            body: formData,
+            headers: {
+                Accept: "application/json",
+            },
+        });
     }
+
 }))
 
 export { useListenStore }

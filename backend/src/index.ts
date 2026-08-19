@@ -30,10 +30,12 @@ const uploadSongZodType = z.object({
     roomId: z.number(),
     creator: z.string(),
 
-    metadata: z.object({
-        name: z.string(),
-        artist: z.string()
-    })
+    metadata: z.string()
+})
+
+const metadataZod = z.object({
+    name: z.string(),
+    artist: z.string()
 })
 
 app.post("/upload-song", async (c) => {
@@ -48,6 +50,12 @@ app.post("/upload-song", async (c) => {
     const fileBytes = await file.bytes()
     const coverArtFile = bodyParsed.data.coverArt
     const roomId = bodyParsed.data.roomId
+    const metadata = JSON.parse(bodyParsed.data.metadata)
+    const metadataParsed = metadataZod.safeParse(metadata)
+    if (metadataParsed.success == false) {
+        return c.json({ success: false, message: "Metadata parse failed" }, 400)
+    }
+
     if (typeof file == "string") {
         return c.json({ success: false, message: "File is a string, not a File. Why?" }, 400)
     }
@@ -82,8 +90,8 @@ app.post("/upload-song", async (c) => {
         roomId: room.id,
         mimeType: mimeType.mime,
 
-        name: bodyParsed.data.metadata.name,
-        artist: bodyParsed.data.metadata.artist,
+        name: metadataParsed.data.name,
+        artist: metadataParsed.data.artist,
 
         creationDate: new Date()
     })
