@@ -75,7 +75,7 @@ export interface ServerToClientEvents {
     new_room: (roomData: InferSelectModel<typeof schema.roomsTable>) => void;
     delete_room: (id: number) => void;
 
-    join_request: (data: { id: string, name: string }) => void;
+    join_request: (data: { roomId: number, user: { id: string, name: string } }) => void;
     allowed_user: (data: { roomId: number, userId: string }) => void;
 
     joined_room: (data: InferSelectModel<typeof schema.roomsTable>) => void;

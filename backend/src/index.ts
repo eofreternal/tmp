@@ -192,7 +192,10 @@ io.on("connection", (socket) => {
     socket.join(socket.data.user.id);
     const joinRequestsForCreator = joinRequests.filter(item => item.creator == socket.data.user.id)
     for (const item of joinRequestsForCreator) {
-        socket.emit("join_request", item.user)
+        socket.emit("join_request", {
+            user: item.user,
+            roomId: item.roomId
+        })
     }
 
     socket.on("fetch_rooms", async () => {
@@ -269,7 +272,10 @@ io.on("connection", (socket) => {
                 }
 
                 joinRequests.push({ creator: room.creator, roomId: room.id, user: socket.data.user })
-                socket.to(room.creator).emit("join_request", socket.data.user)
+                socket.to(room.creator).emit("join_request", {
+                    roomId: room.id,
+                    user: socket.data.user
+                })
                 return
             }
         }
