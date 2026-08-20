@@ -170,9 +170,14 @@ async function makeAllClientsLeaveRoom(roomName: string) {
     }
 }
 
+const str = z.string()
 io.use(async (socket, next) => {
-    const token = socket.handshake.auth.token
-    const dataParsed = authInfoZodType.safeParse(token)
+    console.log(socket.handshake)
+    const token = str.safeParse(socket.handshake.headers.auth)
+    if (token.success == false) {
+        return next(new Error("Authentication failed"));
+    }
+    const dataParsed = authInfoZodType.safeParse(JSON.parse(token.data))
     if (dataParsed.success == false) {
         return next(new Error("Authentication failed"));
     }

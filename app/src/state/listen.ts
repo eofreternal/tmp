@@ -79,11 +79,11 @@ const useListenStore = create<{
         }
 
         const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io("10.0.0.38:3008", {
-            auth: {
-                token: {
+            extraHeaders: {
+                auth: JSON.stringify({
                     id: await getOrSetDeviceId(),
                     name: name
-                }
+                })
             }
         })
 
